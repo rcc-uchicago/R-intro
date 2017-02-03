@@ -1,0 +1,44 @@
+Episodes
+--------
+
+1. Setting up the R environment.
+    - Choose: RStudio or R + editor (e.g., emacs).
+    - Set working directory.
+    - 
+
+2. Downloading the code and data.
+
+    - Explain how to retrieve the github repository.
+
+    - Download "all associations" file from here:
+      https://www.ebi.ac.uk/gwas/api/search/downloads/full
+
+    - Copy this file to data folder in git repository.
+      You should have file
+      gwas_catalog_v1.01-associations_e87_r2017-01-30.tsv in the
+      "data" folder.
+
+    - See here for background info on what is contained in this file.
+
+    - In summary, give full file structure.
+
+3. Installing and using packages.
+
+4. Executing the R code.
+
+5. Reading data into R.
+
+6. ...
+
+Other resources
+---------------
+
+* Software Carpentry:
+  http://software-carpentry.org/lessons
+
+* Data Carpentry:
+  http://www.datacarpentry.org/lessons
+
+* R for Data Science book (available online):
+  http://r4ds.had.co.nz
+
