@@ -5,8 +5,16 @@ date: February 7, 2017
 output: html_document
 ---
 
-This is an *R Markdown Notebook* to reproduce some of my analyses of
-the GWAS Catalog data. *Add a few more sentences here about the GWAS
+## Overview
+
+This is an *R Markdown Notebook*.
+[R Markdown](http://r4ds.had.co.nz/r-markdown.html) combines
+[Markdown](http://daringfireball.net/projects/markdown), a popular,
+easy-to-read plain text formatting syntax, with "chunks" of R
+code. *Explain here what is neat about notebooks.*
+
+This notebook contains code to reproduce some of my analyses of the
+GWAS Catalog data. *Add a few more sentences here about the GWAS
 Catalog data, and why we might want to analyze it.*
 
 For more background, read the [GWAS Catalog
@@ -46,20 +54,40 @@ In summary, give full file structure:
 R-intro/
 ├── README.md
 ├── LICENSE
-
+├── data
+│   ├── README.md
+│   └── gwas_catalog.tsv
+└── analysis
+    ├── README.md
+    └── demo_gwas_catalog.Rmd
 ```
 
 ## Setting up the R programming environment
 
 Choose: RStudio or R + editor (e.g., emacs).
 
+Often called the *working environment*.
+
 Set working directory.
 
-## 
+## Installing and using R packages
 
-## Reading the data into R
+*Add content for this section.*
 
+## Executing the R code
+
+*Add content for this section.*
+
+## Reading the data into the R environment
+
+The GWAS data set is a large table with 35,077 rows and X columns. It
+could conceivably be opened in Excel.
 
 ```{r}
 plot(cars)
 ```
+
+## (Another section goes here)
+
+* Add content for another section, as needed.*
+
