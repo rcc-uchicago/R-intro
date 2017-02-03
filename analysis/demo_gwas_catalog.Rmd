@@ -81,7 +81,10 @@ Set working directory.
 ## Reading the data into the R environment
 
 The GWAS data set is a large table with 35,077 rows and X columns. It
-could conceivably be opened in Excel.
+could conceivably be opened in Excel. To illustrate this, open the
+[gwas_catalog_small.xlsx](/data/gwas_catalog_small.xlsx) Excel
+spreadsheet, which contains the first 100 rows of the GWAS Catalog
+table.
 
 ```{r}
 plot(cars)
