@@ -21,33 +21,41 @@ code. R Markdown notebooks can be easily rendered into various formats
 (PDF, HTML, *etc.*) for sharing your code and results with 
 collaborators.
 
-This notebook contains code to reproduce some of my analyses of the
-[NHGRI-EBI GWAS Catalog](http://www.ebi.ac.uk/gwas/). The GWAS Catalog 
-provides results from thousands of genome-wide association studies of 
-inherited diseases and completx traits. For more background, read the 
+This notebook contains code to reproduce some of my analyses of data from 
+the [NHGRI-EBI GWAS Catalog](http://www.ebi.ac.uk/gwas/). The GWAS Catalog 
+provides results from thousands of [genome-wide association 
+studies](http://dx.doi.org/10.1001/jama.299.11.1335) of 
+inherited diseases and completx traits. My aim in using the GWAS Catalog 
+is to illustrate using R to process and analyze large-scale, complex 
+tabular data.
+
+For background on the GWAS Catalog, see the 
 [GWAS Catalog paper](http://doi.org/10.1093/nar/gkt1229). See also the 
 [GWAS Diagram](http://www.ebi.ac.uk/gwas/diagram) for an evocative visual
-summary of the data. Our aim here in working with the GWAS Catalog is to
-illustrate the use of R to process and analyze complex tabular data.
+summary of the data. 
 
 # How to use this document
 
 There are several ways to view this document:
 
 1. The simplest option is to open it up in a text editor. I recommend 
-   choosing a text editor with syntax highlighting for Markdown, such as 
-   emacs or [Atom](http://atom.io). 
+   choosing a text editor that has syntax highlighting for Markdown, 
+   such as emacs or [Atom](http://atom.io). 
    
-2. Open this file in RStudio (see below).
+2. Open this file in RStudio (see below for details).
 
-3. Render, or "knit", this document into a document that is pleasant
+3. Render, or "knit", this notebook into a format that is pleasant
    to read on the screen, such as PDF or HTML. In the same folder as
    this file, I have provided an example of an HTML file rendered from 
    this document, which can be viewed in your favourite Web browser.
 
-Intended to be used interactively.
+## This notebook is an interactive document
 
-**Note:** Add note about setting `toc_float = false` above.
+Although you caneasily generate all the output and figures with a single 
+command from the`rmarkdown` package (see below), my recommendation is to 
+step through the code and explanations, and run the code on your own by 
+copying and pasting the code into the R console, or by using the "Run" 
+menu in RStudio.
 
 # Introduce yourself
 
@@ -61,53 +69,52 @@ consider helping your neighbors.
 
 There are several options for setting up your R programming environment. 
 In this section, we will explore some of the R environment options that are 
-available on the [midway compute cluster](https://rcc.uchicago.edu/docs), 
-and on your laptop. The option that is best for you will depend on the 
-situation.
+available on the [midway compute cluster](https://rcc.uchicago.edu/docs) and 
+on your laptop. *No single option is best for everyone.*
 
 ## R on your laptop
 
 I recommend installing both R and RStudio. 
 
 1. Install the latest precompiled binary distribution of R by following 
-   the instructions at [the CRAN website](https://cran.r-project.org).
-   This provides a text-based R environment.
+   the instructions on the [CRAN website](https://cran.r-project.org).
+   This provides a text-based R programming environment.
 
 2. Next, install the free version of RStudio Desktop from 
    [here](https://www.rstudio.com/products/rstudio/download).
    RStudio provides a complete IDE (integrated development environment)
-   for programming in R.
+   for R programming.
 
 3. Try running R and RStudio on your computer. You can also try running
    R from a command-line shell (e.g., [iTerm2](https://iterm2.com) on Mac, 
-  [Cygwin](http://www.cygwin.com) on Windows) simply by typing `R` and 
-  hitting the enter key.
+  [Cygwin](http://www.cygwin.com) on Windows). To do so, simply type `R`,
+  and hit the enter key.
 
-4. Test your R graphics setup, e.g., try copying and pasting the code chunk 
+4. Test your R graphics setup; e.g., try copying and pasting the code chunk 
    below into R or RStudio. in RStudio, this will (by default) draw the plot
    in the "Plots" tab. In R, this will render a plot on your screen, 
    *but only if you have X Windows software installed on your computer 
    already.* For example, for Mac OS X you need to have 
    [XQuartz](http://www.xquartz.org). 
 
-```{r example_plot, eval = FALSE}
+```{r example_plot, eval=FALSE}
 library(lattice)
-print(xyplot(dist ~ speed,cars,pch = 20,cex = 1.5,
-             col = "dodgerblue"))
+print(xyplot(dist ~ speed,cars,pch = 20,
+             cex = 1.5,col = "dodgerblue"))
 ```
 
 ## R on midway without graphics
 
-Here we explore how R can be run in the command-line shell on the 
+Next, we explore how to run R in the command-line shell on the 
 *midway* computer cluster. This approach is particularly useful for 
-executing non-interactive computations in R; that is, computations that 
-may take several hours to run, and/or require a large amount of memory. 
-I usually accompany the text-based R environment with a text editor 
-(ideally one that has syntax highlighting) so that I can record
-my data analysis steps into an R script that can be run later.
+executing *non-interactive* computations in R; e.g., computations that 
+may take several hours to run. I usually accompany the text-based R 
+environment with a text editor (ideally one that has syntax 
+highlighting) so that I can record my data analysis steps into an 
+R script that can be run later.
 
-Using *midway2* is recommended, when possible, because it has the latest
-version of R installed.
+I recommend using *midway2* instead of *midway1* because it has the 
+most up-to-date version of R installed.
 
 ### Getting a midway user account
 
@@ -144,23 +151,22 @@ ssh -X username@midway2.rcc.uchicago.edu
 If you do not have an ssh program, or you are not sure how to access it,
 move to the next section, "R on midway with graphics".
 
-Although not strictly necessary because we are not doing any
-intensive computation, to illustrate "best practice"", we will request an 
-**interactive session** to allocate computational resources for our 
-computations in R. We have already reserved resources for this workshop
-under the `r_workshop` reservation.
+To illustrate "best practice", we will request an **interactive session** to allocate computational resources for our computations in R:
 
 ```{bash eval=FALSE}
 sinteractive --time=02:00:00 --mem=2G --reservation=r_workshop
 ```
 
-(To safeguard against losing your Internet connection, I 
-recommend using the *screen* command before running `sinteractive`. 
-Explaining this command is outside the scope of this workshop, but you can 
-read a tutorial on the screen command [here](http://www.howtoforge.com/linux_screen).)
+Outside the workshop, you will have to remove the `--reservation=r_workshop`
+portion of this command.
 
 See [here](https://rcc.uchicago.edu/docs/connecting/) for more details 
 on connecting to the *midway* compute cluster.
+
+(To safeguard against losing your Internet connection, I recommend using 
+the **screen** command before running `sinteractive`. Explaining this command 
+is outside the scope of this workshop, but you can read a tutorial on the 
+screen command [here](http://www.howtoforge.com/linux_screen).)
 
 ### Loading and running R
 
@@ -174,14 +180,14 @@ R --no-save
 I include the `--no-save` flag because I don't like being asked whether
 I want to save the results of my R session, but this is optional.
 
-Once you are in R, let's calculate the average petal length of different
-species of iris from the Iris data set (*why not?*):
+Once you are in R, let's print the first 5 rows of the Iris data table:
 
 ```{R iris, comment=NA}
-print(with(iris,tapply(Petal.Length,Species,mean)))
+print(head(iris,n = 5))
 ```
 
-Once you have completed this calculation, quit R and return to the shell environment:
+Once you have completed this step, quit R, and return to the shell 
+environment:
 
 ```{R quit, eval=FALSE}
 quit()
@@ -190,39 +196,118 @@ quit()
 **Note:** In later episodes, we will omit the part about quitting R, so 
 please remember how to do this.
 
+### Running R code without entering the R environment
+
+Although R is mainly used interactively, it is also possible to execute R code 
+like other non-interactive programming languages (e.g., Java). To do this, we
+use the `Rscript` command:
+
+```{bash r_cmd_batch, eval=FALSE}
+Rscript -e "print(head(iris,n = 5))"
+```
+
+More commonly, `Rscript` is used to execute R code stored in a file; 
+e.g., `Rscript my_analysis.R`.
+
 ## R on midway with graphics
 
-First, we will
+We have already explored R with graphics on your computer. How can we
+visualize data in R on the *midway* compute cluster? There are several 
+ways to do this. The recommended approach is to run R or RStudio in
+[ThinLinc](http://www.cendio.com/thinlinc). Although the ThinLinc graphics
+are not always crisp, it is the most reliable solution on our cluster.
 
-Choose: RStudio or R + editor (e.g., emacs).
+1. Log in to ThinLinc. The simplest option is to use the 
+[Web interface](http://midway.rcc.uchicago.edu). However, one drawback is that
+it doesn't support copying and pasting very well. See 
+[here](https://rcc.uchicago.edu/docs/connecting) for more information 
+on connecting to midway using ThinLinc.
 
-Often called the *working environment*.
+2. Open up a ROXTerm window by clicking the icon at the bottom that looks
+   like a computer monitor.
 
-## Downloading the code
+3. Connect to midway2 with X forwarding:
 
+```{bash thinlinc_midway2, eval=FALSE}
+ssh -Y midway2-login1.rcc.uchicago.edu
+```
 
-*Instructions on cloning or downloading the github repository go
-here. You should have a folder somewhere on your computer, or in your
-home folder on a compute cluster, called `R-intro`.*
+4. Load and run either RStudio or R (or both!):
 
-Think of the `R-intro` folder as our project folder; all files that are
-useful for our data analysis project (code, data, other documents),
-and all results we generate from these files should be saved within
-this folder. This will allow us to more easily keep track of our
-work.
+```{bash rstudio_graphics, eval=FALSE}
+module load R/3.3
+module load rstudio
+rstudio
+R --no-save
+```
 
-## Downloading the data
+5. Test R graphics by copying and pasting the code chunk below into R 
+   and/or RStudio.
 
-Download the file that contains all associations with added ontology
-from [here](http://www.ebi.ac.uk/gwas/api/search/downloads/alternative).
+```{r example_plot2, eval=FALSE}
+library(lattice)
+print(xyplot(dist ~ speed,cars,pch = 20,
+             cex = 1.5,col = "dodgerblue"))
+```
 
-Copy this file to [data](data) folder in git repository, and rename
-this file as `gwas_catalog.tsv`.
+# Downloading the code
 
-See [here](https://www.ebi.ac.uk/gwas/docs/fileheaders) for details on
-what is contained in this file.
+Now that we have explored several different R environment options, please
+choose one of them for the remainder of the workshop. You will need an
+environment that can generate graphics. The recommended option is to run
+R or RStudio on *midway* because we have already installed the packages that
+are necessary to complete this workshop.
 
-In summary, give full file structure:
+In this section, we will download, or *clone*, all the files from the Github
+repository. There are several ways this can be done:
+
+1. Go to the [Github webpage](http://github.com/rcc-uchicago/R-intro) and 
+   click the green "clone or download" button.
+
+2. Download and unzip a ZIP file containing the entire repository 
+   (this may only work on the compute cluster):
+
+```{bash download_zip, eval=FALSE}
+wget https://github.com/rcc-uchicago/R-intro/archive/master.zip
+unzip master.zip
+mv R-intro-master R-intro
+```
+
+3. Clone the repository using **git** (requires the git command):
+
+```{bash clone_repo, eval=FALSE}
+git clone https://github.com/rcc-uchicago/R-intro.git R-intro
+```
+
+Whatever approach you use, in the end, you should have a folder on your 
+computer, or in your *midway* home directory, called `R-intro`.
+
+Think of the `R-intro` folder as the main project folder; all files 
+relevant to our data analysis project (code, data, *etc.*) should be 
+saved within this folder. This will allow us to more easily keep track 
+of our work.
+
+Next, we will retrieve the data for our data analysis project.
+
+# Downloading the data
+
+1. Download the file that contains all associations with added ontology
+   either by clicking [this 
+   link](http://www.ebi.ac.uk/gwas/api/search/downloads/alternative), 
+   or with the wget command:
+   
+```{bash wget_data, eval=FALSE}
+wget http://www.ebi.ac.uk/gwas/api/search/downloads/alternative
+mv alternative gwas_catalog.tsv
+```
+
+2. Copy this file to the [data](../data) folder in git repository, and 
+   rename this file as `gwas_catalog.tsv`. 
+   See [here](https://www.ebi.ac.uk/gwas/docs/fileheaders) for details on
+   what is contained in this file.
+
+Once you have completed these steps, the `R-intro` folder should have the 
+following file structure:
 
 ```
 R-intro/
@@ -236,9 +321,11 @@ R-intro/
     └── demo_gwas_catalog.Rmd
 ```
 
-## Set working directory
+# Setting the working directory in your R programming environment
 
-## Installing and using the packages
+*Add text here.*
+
+# Installing and using the packages
 
 Explain briefly what packages are, how to access them.
 
