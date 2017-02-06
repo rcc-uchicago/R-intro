@@ -29,11 +29,10 @@ either on the RCC compute cluster, or on their own computer.
 
 **Level:** Introductory
 
-**Prerequistes:** PLEASE NOTE: Participants should have been exposed
-to a UNIX-like shell environment, and should be able to log in to the
-RCC compute cluster. All participants must bring a laptop with a Mac,
-Linux, or Windows operating system that they have administrative
-privileges on.
+**Prerequistes:** Participants should have been exposed to a UNIX-like
+shell environment, and should be able to log in to the RCC compute
+cluster. All participants must bring a laptop with a Mac, Linux, or
+Windows operating system that they have administrative privileges on.
 
 **Where:** Kathleen A. Zar Room, John Crerar Library, University of
   Chicago ([OpenStreetMap](https://www.openstreetmap.org/search?query=john%20crerar%20library#map=18/41.79053/-87.60282)).
@@ -51,6 +50,18 @@ examples in this repository. All instructional material contained in
 this repository is made available under the Creative Commons
 Attribution license
 ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0)).
+
+## Quick Start
+
+*Write quick start.*
+
+## Aims
+
+*Description of workshop aims goes here.*
+
+## Outline
+
+*Give outline of workshop here.*
 
 ## Other resources
 
