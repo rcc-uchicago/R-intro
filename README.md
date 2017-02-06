@@ -51,3 +51,12 @@ examples in this repository. All instructional material contained in
 this repository is made available under the Creative Commons
 Attribution license
 ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0)).
+
+## Other resources
+
++ [Software Carpentry](http://software-carpentry.org/lessons)
+  
+* [Data Carpentry](http://www.datacarpentry.org/lessons)
+
+* [R for Data Science](http://r4ds.had.co.nz)
+
