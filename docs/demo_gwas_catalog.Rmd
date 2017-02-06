@@ -13,7 +13,7 @@ output:
 
 # About this document
 
-**This is an R Markdown Notebook.**
+This is an R Markdown Notebook.
 [R Markdown](http://r4ds.had.co.nz/r-markdown.html) combines
 [Markdown](http://daringfireball.net/projects/markdown), a popular,
 easy-to-read plain text formatting syntax, with "chunks" of R

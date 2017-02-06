@@ -53,7 +53,9 @@ Attribution license
 
 ## Quick Start
 
-*Write quick start.*
+Go to [this
+webpage](https://rcc-uchicago.github.io/R-intro/demo_gwas_catalog.html)
+and follow the steps there.
 
 ## Aims
 
