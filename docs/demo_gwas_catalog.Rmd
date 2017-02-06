@@ -41,13 +41,13 @@ There are several ways to view this document:
 2. Open this file in RStudio (see below).
 
 3. Render, or "knit", this document into a document that is pleasant
-   to read on the screen, such as 
+   to read on the screen, such as PDF or HTML. In the same folder as
+   this file, I have provided an example of an HTML file rendered from 
+   this document, which can be viewed in your favourite Web browser.
 
 Intended to be used interactively.
 
-*Add text here.*
-
-Add note about setting `toc_float = false` above.
+**Note:** Add note about setting `toc_float = false` above.
 
 # Introduce yourself
 
