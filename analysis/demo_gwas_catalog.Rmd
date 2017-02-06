@@ -1,5 +1,5 @@
 ---
-title: "Analysis of GWAS Catalog data for 'Introduction to R' workshop"
+title: "Analysis of GWAS Catalog data for 'Intro to R' workshop"
 author: Peter Carbonetto
 date: February 7, 2017
 output: html_document
@@ -25,7 +25,36 @@ summary of the data.
 Give overview of the steps in our analysis (as a list): retrieve code
 and data, set up R environment, etc.
 
-## Retrieving the code
+## Introduce yourself
+
+Introduce yourself to your neighbors. If you get stuck, please ask one your 
+peers for help before asking the instructor. Conversely, if you have completed
+the steps more quickly than others, consider helping your neighbors.
+
+## Setting up your R programming environment
+
+There are several options for setting up your R programming environment. 
+In this section, we will explore the R environment options that are 
+available on the *midway* compute cluster, and on your laptop (or personal 
+computer). 
+
+### R on your computer
+
+There are 
+
+### R on midway, no graphics
+
+### R on midway, with graphics
+
+First, we will
+
+
+
+Choose: RStudio or R + editor (e.g., emacs).
+
+Often called the *working environment*.
+
+## Downloading the code
 
 *Instructions on cloning or downloading the github repository go
 here. You should have a folder somewhere on your computer, or in your
@@ -62,17 +91,13 @@ R-intro/
     └── demo_gwas_catalog.Rmd
 ```
 
-## Setting up the R programming environment
+## Set working directory
 
-Choose: RStudio or R + editor (e.g., emacs).
+## Installing and using the packages
 
-Often called the *working environment*.
+Explain briefly what packages are, how to access them.
 
-Set working directory.
-
-## Installing and using R packages
-
-*Add content for this section.*
+Mention which packages we will use.
 
 ## Executing the R code
 
@@ -94,3 +119,6 @@ plot(cars)
 
 * Add content for another section, as needed.*
 
+## About this document
+
+*Add session info.*
