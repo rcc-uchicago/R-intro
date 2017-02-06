@@ -2,10 +2,15 @@
 title: "Analysis of GWAS Catalog data for 'Intro to R' workshop"
 author: Peter Carbonetto
 date: February 7, 2017
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    theme: default
 ---
 
-## Overview
+# Overview
 
 This is an *R Markdown Notebook*.
 [R Markdown](http://r4ds.had.co.nz/r-markdown.html) combines
@@ -25,24 +30,26 @@ summary of the data.
 Give overview of the steps in our analysis (as a list): retrieve code
 and data, set up R environment, etc.
 
-## Introduce yourself
+# Introduce yourself
 
 Introduce yourself to your neighbors. If you get stuck, please ask one your 
-peers for help before asking the instructor. Conversely, if you have completed
-the steps more quickly than others, consider helping your neighbors.
+peers for help before asking the instructor. 
 
-## Setting up your R programming environment
+Conversely, if you have completed the steps more quickly than others, 
+consider helping your neighbors.
+
+# Setting up your R programming environment
 
 There are several options for setting up your R programming environment. 
 In this section, we will explore the R environment options that are 
 available on the *midway* compute cluster, and on your laptop (or personal 
 computer). 
 
-### R on your computer
+## R on your computer
 
 There are 
 
-### R on midway, no graphics
+## R on midway, no graphics
 
 ### R on midway, with graphics
 
@@ -55,6 +62,7 @@ Choose: RStudio or R + editor (e.g., emacs).
 Often called the *working environment*.
 
 ## Downloading the code
+
 
 *Instructions on cloning or downloading the github repository go
 here. You should have a folder somewhere on your computer, or in your
