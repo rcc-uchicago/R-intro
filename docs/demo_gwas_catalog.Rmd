@@ -273,7 +273,7 @@ unzip master.zip
 mv R-intro-master R-intro
 ```
 
-3. Clone the repository using **git** (requires the git command):
+3. Clone the repository using **git**:
 
 ```{bash clone_repo, eval=FALSE}
 git clone https://github.com/rcc-uchicago/R-intro.git R-intro
@@ -309,7 +309,7 @@ mv alternative gwas_catalog.tsv
 Once you have completed these steps, the `R-intro` folder should have the 
 following file structure:
 
-```
+```{bash repo_tree, eval=FALSE}
 R-intro/
 ├── LICENSE
 ├── README.md
@@ -327,17 +327,50 @@ R-intro/
 
 # Setting the working directory in your R programming environment
 
-*Add text here.*
+Now return to your preferred R environment, either on your computer, or 
+on the compute cluster. If you have exited, please repeat the steps above
+to start a new environment.
+
+To perform the data analysis, we need to make sure that our R
+environment points to the `analysis` folder of our project directory. 
+One way to do this is using the `setwd` function in R. For example, if 
+the `R-intro` files are in the `projects` folder in my home directory, 
+do the following in R or RStudio:
+
+```{R setwd, eval=FALSE}
+setwd("~/projects/R-intro")
+```
+
+Alternatively, RStudio has a "Set Working Directory" option in the "Session"
+menu.
+
+You can find out what your working by typing `getwd()`.
+
+We are almost done with setting up our R environment. The last step is
+to install some packages used in the data analysis.
 
 # Installing and using the packages
 
-Explain briefly what packages are, how to access them.
+In R, a package is a set of functions, data sets, and other materials, 
+that are bundled together. As of this writing, over 10,000 R packages have
+been developed. The ease of installing and using packages is one of the 
+reasons R has become so popular. Therefore, it is helpful to understand 
+the steps in installing and loading packages.
 
-Mention which packages we will use.
+Some packages are already available in your environment when you start R. 
+One example is  the `stats` package because it contains basic functions 
+that are widely used in statistical calculations.
+
+```{R packages, eval=FALSE}
+rmarkdown
+```
+
+*Add instructions here for installing the required packages.*
 
 ## Executing the R code
 
-*Add content for this section.*
+**Add instructions here for running the code; give instructions from
+RStudio, and using the RMarkdown command.**
 
 ## Reading the data into the R environment
 
@@ -347,7 +380,7 @@ could conceivably be opened in Excel. To illustrate this, open the
 spreadsheet, which contains the first 100 rows of the GWAS Catalog
 table.
 
-```{r}
+```{r read_data}
 plot(cars)
 ```
 

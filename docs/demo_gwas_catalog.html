@@ -363,7 +363,7 @@ mv alternative gwas_catalog.tsv</code></pre>
 <li>Copy this file to the <a href="../data">data</a> folder in git repository, and rename this file as <code>gwas_catalog.tsv</code>. See <a href="https://www.ebi.ac.uk/gwas/docs/fileheaders">here</a> for details on what is contained in this file.</li>
 </ol>
 <p>Once you have completed these steps, the <code>R-intro</code> folder should have the following file structure:</p>
-<pre><code>R-intro/
+<pre class="bash"><code>R-intro/
 ├── LICENSE
 ├── README.md
 ├── conduct.md
@@ -379,7 +379,11 @@ mv alternative gwas_catalog.tsv</code></pre>
 </div>
 <div id="setting-the-working-directory-in-your-r-programming-environment" class="section level1">
 <h1><span class="header-section-number">7</span> Setting the working directory in your R programming environment</h1>
-<p><em>Add text here.</em></p>
+<p>Now return to your preferred R environment, either on your computer, or on the compute cluster. If you have exited, please repeat the steps above to start a new environment.</p>
+<p>To perform the data analysis, we need to make sure that our R environment points to the <code>analysis</code> folder of our project directory. One way to do this is using the <code>setwd</code> function in R. For example, if the <code>R-intro</code> files are in the <code>projects</code> folder in my home directory, do the following in R or RStudio:</p>
+<pre class="r"><code>setwd(&quot;~/projects/R-intro&quot;)</code></pre>
+<p>Alternatively, RStudio has a “Set Working Directory” option in the “Session” menu.</p>
+<p>You can find out what your working by typing <code>getwd()</code>.</p>
 </div>
 <div id="installing-and-using-the-packages" class="section level1">
 <h1><span class="header-section-number">8</span> Installing and using the packages</h1>
