@@ -357,20 +357,25 @@ mv R-intro-master R-intro</code></pre>
 <ol style="list-style-type: decimal">
 <li>Download the file that contains all associations with added ontology either by clicking <a href="http://www.ebi.ac.uk/gwas/api/search/downloads/alternative">this link</a>, or with the wget command:</li>
 </ol>
-<pre class="bash"><code>wget http://www.ebi.ac.uk/gwas/api/search/downloads/alternative -o gwas_catalog.tsv</code></pre>
+<pre class="bash"><code>wget http://www.ebi.ac.uk/gwas/api/search/downloads/alternative
+mv alternative gwas_catalog.tsv</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Copy this file to the <a href="../data">data</a> folder in git repository, and rename this file as <code>gwas_catalog.tsv</code>. See <a href="https://www.ebi.ac.uk/gwas/docs/fileheaders">here</a> for details on what is contained in this file.</li>
 </ol>
 <p>Once you have completed these steps, the <code>R-intro</code> folder should have the following file structure:</p>
 <pre><code>R-intro/
-├── README.md
 ├── LICENSE
+├── README.md
+├── conduct.md
+├── assets
 ├── data
 │   ├── README.md
-│   └── gwas_catalog.tsv
-└── analysis
+│   ├── gwas_catalog.tsv
+│   └── gwas_catalog_small.xlsx
+└── docs
     ├── README.md
-    └── demo_gwas_catalog.Rmd</code></pre>
+    ├── demo_gwas_catalog.Rmd
+    └── demo_gwas_catalog.html</code></pre>
 </div>
 <div id="setting-the-working-directory-in-your-r-programming-environment" class="section level1">
 <h1><span class="header-section-number">7</span> Setting the working directory in your R programming environment</h1>

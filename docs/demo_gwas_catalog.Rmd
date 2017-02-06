@@ -311,14 +311,18 @@ following file structure:
 
 ```
 R-intro/
-├── README.md
 ├── LICENSE
+├── README.md
+├── conduct.md
+├── assets
 ├── data
 │   ├── README.md
-│   └── gwas_catalog.tsv
-└── analysis
+│   ├── gwas_catalog.tsv
+│   └── gwas_catalog_small.xlsx
+└── docs
     ├── README.md
-    └── demo_gwas_catalog.Rmd
+    ├── demo_gwas_catalog.Rmd
+    └── demo_gwas_catalog.html
 ```
 
 # Setting the working directory in your R programming environment
