@@ -1,5 +1,5 @@
 ---
-title: "Analysis of GWAS Catalog data for 'Intro to R' workshop"
+title: "Intro to R: Analyzing the GWAS Catalog"
 author: Peter Carbonetto
 date: February 7, 2017
 output: 
@@ -11,27 +11,39 @@ output:
     theme: default
 ---
 
-# Overview
+# About this document
 
-This is an *R Markdown Notebook*.
+**This is an R Markdown Notebook.**
 [R Markdown](http://r4ds.had.co.nz/r-markdown.html) combines
 [Markdown](http://daringfireball.net/projects/markdown), a popular,
 easy-to-read plain text formatting syntax, with "chunks" of R
-code. *Explain here what is neat about notebooks.*
+code. R Markdown notebooks can be easily rendered into various formats
+(PDF, HTML, *etc.*) for sharing your code and results with 
+collaborators.
 
 This notebook contains code to reproduce some of my analyses of the
-GWAS Catalog data. *Add a few more sentences here about the GWAS
-Catalog data, and why we might want to analyze it.*
-
-For more background, read the [GWAS Catalog
-paper](http://doi.org/10.1093/nar/gkt1229). See also the [GWAS
-Diagram](http://www.ebi.ac.uk/gwas/diagram) for an evocative visual
-summary of the data.
-
-Give overview of the steps in our analysis (as a list): retrieve code
-and data, set up R environment, etc.
+[NHGRI-EBI GWAS Catalog](http://www.ebi.ac.uk/gwas/). The GWAS Catalog 
+provides results from thousands of genome-wide association studies of 
+inherited diseases and completx traits. For more background, read the 
+[GWAS Catalog paper](http://doi.org/10.1093/nar/gkt1229). See also the 
+[GWAS Diagram](http://www.ebi.ac.uk/gwas/diagram) for an evocative visual
+summary of the data. Our aim here in working with the GWAS Catalog is to
+illustrate the use of R to process and analyze complex tabular data.
 
 # How to use this document
+
+There are several ways to view this document:
+
+1. The simplest option is to open it up in a text editor. I recommend 
+   choosing a text editor with syntax highlighting for Markdown, such as 
+   emacs or [Atom](http://atom.io). 
+   
+2. Open this file in RStudio (see below).
+
+3. Render, or "knit", this document into a document that is pleasant
+   to read on the screen, such as 
+
+Intended to be used interactively.
 
 *Add text here.*
 
@@ -90,7 +102,11 @@ Here we explore how R can be run in the command-line shell on the
 *midway* computer cluster. This approach is particularly useful for 
 executing non-interactive computations in R; that is, computations that 
 may take several hours to run, and/or require a large amount of memory. 
-Using *midway2* is recommend, when possible, because it has the latest
+I usually accompany the text-based R environment with a text editor 
+(ideally one that has syntax highlighting) so that I can record
+my data analysis steps into an R script that can be run later.
+
+Using *midway2* is recommended, when possible, because it has the latest
 version of R installed.
 
 ### Getting a midway user account
@@ -128,26 +144,55 @@ ssh -X username@midway2.rcc.uchicago.edu
 If you do not have an ssh program, or you are not sure how to access it,
 move to the next section, "R on midway with graphics".
 
-Request an **interactive session** using the reservation for this
-workshop. 
+Although not strictly necessary because we are not doing any
+intensive computation, to illustrate "best practice"", we will request an 
+**interactive session** to allocate computational resources for our 
+computations in R. We have already reserved resources for this workshop
+under the `r_workshop` reservation.
 
 ```{bash eval=FALSE}
 sinteractive --time=02:00:00 --mem=2G --reservation=r_workshop
 ```
 
-To safeguard against losing your Internet connection, I 
-recommend using the *screen* command. Explaining this command is 
-outside the scope of this workshop, but you can read a tutorial
-on the screen command [here](http://www.howtoforge.com/linux_screen).
+(To safeguard against losing your Internet connection, I 
+recommend using the *screen* command before running `sinteractive`. 
+Explaining this command is outside the scope of this workshop, but you can 
+read a tutorial on the screen command [here](http://www.howtoforge.com/linux_screen).)
 
-For more information on connecting to the *midway* compute cluster,
-see [here](https://rcc.uchicago.edu/docs/connecting/)
+See [here](https://rcc.uchicago.edu/docs/connecting/) for more details 
+on connecting to the *midway* compute cluster.
+
+### Loading and running R
+
+Load the R 3.3 module, and start R:
+
+```{bash eval=FALSE}
+module load R/3.3
+R --no-save
+```
+
+I include the `--no-save` flag because I don't like being asked whether
+I want to save the results of my R session, but this is optional.
+
+Once you are in R, let's calculate the average petal length of different
+species of iris from the Iris data set (*why not?*):
+
+```{R iris, comment=NA}
+print(with(iris,tapply(Petal.Length,Species,mean)))
+```
+
+Once you have completed this calculation, quit R and return to the shell environment:
+
+```{R quit, eval=FALSE}
+quit()
+```
+
+**Note:** In later episodes, we will omit the part about quitting R, so 
+please remember how to do this.
 
 ## R on midway with graphics
 
 First, we will
-
-
 
 Choose: RStudio or R + editor (e.g., emacs).
 
