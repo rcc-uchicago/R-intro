@@ -489,7 +489,7 @@ many things that are important to know about these few lines of code:
 ## Inspecting the data
 
 Now that we have the data loaded into the working environment, we can 
-inspect it. Here are a couple simple commands that are commonly used to 
+inspect it. Here are a couple simple commands that I commonly use to 
 get an overview of the data:
 
 ```{R table_properties, results="hold", comment=NA, eval=TRUE}
@@ -507,34 +507,49 @@ print(head(gwas,n = 5))
 print(tail(gwas,n = 5))
 ```
 
+We can also look at individual columns of the table; e.g.,
+
+```{R inspect_table_cols, eval=TRUE}
+x <- gwas[["MAPPED_GENE"]]
+print(head(x,n = 20))
+```
+
+Note that the first line in this code chunk created a new variable
+containing the data from a single column of the spreadsheet.
+
 ## Manipulating the data
+
+R has a wide range of tools specifically aimed at manipulating data frames.
+Here we will get a small sampling of R's capabilities.
 
 We certainly don't have time to look closely at all the GWAS Catalog data.
 But we can at least start by looking closely at the "MAPPED_TRAIT" column, 
-which indicates which disease or trait was being studied:
+which records the relevant disease or trait:
 
 ```{R chromosome_inspect, comment=NA, eval=TRUE}
 
-# Our first attempt at summarizing the MAPPED_TRAIT column doesn't yield
-# much insight.
-print(summary(gwas[["MAPPED_TRAIT"]]))
+# Typically, the "summary" function is useful. However, our first attempt at 
+# summarizing the MAPPED_TRAIT column doesn't yield much useful information
+x <- gwas[["MAPPED_TRAIT"]]
+print(summary(x))
 
 # What if we convert the column to a categorical variable? That helps,
 # but not a lot; there are too many categories, or "levels", for the summary
-# to be useful, so I capped the summary at showing only the top 10 most
-# common categories (diseases/traits).
-trait <- factor(gwas[["MAPPED_TRAIT"]])
+# to be useful. (I capped the summary at the top 10 most frequently occurring 
+# traits, otherwise it will be a very long list.)
+trait <- factor(x)
 print(nlevels(trait))
 print(summary(trait,maxsum = 10))
 
 # To make our initial investigation more manageable, let's focus on
-# only diseases/traits that appear at least 100 entries (that is,
-# reported associations). This is an arbitrary cutoff of course, but
-# data analysis is best approached in small bites.
+# only traits that appear at least 100 times in the database. This is an 
+# arbitrary cutoff of course, but data analysis is best approached in 
+# small bites.
 counts         <- table(trait)
-traits.to.keep <- which(counts >= 100)
+traits.to.keep <- names(which(counts >= 100))
 cat("Number of traits after filtering step:",length(traits.to.keep),"\n")
-gwas.small <- subset(gwas,is.element(MAPPED_TRAIT,names(traits.to.keep)))
+gwas.small <- subset(gwas,is.element(MAPPED_TRAIT,traits.to.keep))
+cat("Number of table rows before filtering step:",nrow(gwas))
 cat("Number of table rows after filtering step:",nrow(gwas.small))
 
 # Now that MAPPED_TRAIT in the gwas.small data frame has a smaller
@@ -543,67 +558,89 @@ cat("Number of table rows after filtering step:",nrow(gwas.small))
 gwas.small$MAPPED_TRAIT <- factor(gwas.small$MAPPED_TRAIT)
 ```
 
-A few comments about this chunk of code:
+This code chunk illustrated two manipulations of the data: (1) we filtered
+out columns that didn't meet our criteria; (2) we converted one column two
+a more convenient data type.
 
-+ The `summary` function is a genetic function that can be used for many 
+A few more comments about this code chunk:
+
++ The `summary` function is a generic function that can be used for many 
   different variables and data types. You will find it useful in many 
   situations.
 
-+ A "factor" is a term that R uses for a categorical variable. It is one
-  of the standard data types, and is again useful in many different
++ A `factor` is the term that R uses for "categorical variable". It is one
+  of the standard data types, and it is again useful in many different
   situations.
 
 + The `table` command (a confusing name, admittedly) is used to count
   categorical data (factors).
 
-+ The call to the `subset` function creates a new data table, `gwas.small`,
-  with only entries for the selected diseases/traits. We now have two
-  data frames in our working environment: `gwas` and `gwas.small`. 
++ The call to the `subset` function creates a new data table with only entries 
+  in which the `MAPPED_TRAIT` column is one of the selected traits. We have
+  saved the output to a new variable, `gwas.small`. We now have two data frames
+  in our working environment: `gwas` and `gwas.small`. 
 
-+ The last line in the chunk converts the column to a factor data type,
-  which will be useful in the next section for quickly creating data 
++ The last line in the chunk converts the column to a factor data type.
+  This will be useful in the next section for quickly creating data 
   summaries.
+  
++ Note that the conversion to factor will not taken effect unless we assign 
+  the output of the `factor` function back to the column contained in the 
+  `gwas.small` data frame.
 
 For the remainder, we will work with `gwas.small` only.
 
 ## Creating a simple visual summary of the data
 
-Counting the number of genetic associations per disease/trait is as simple 
+Counting the number of mapped genetic associations per trait is as simple 
 as calling the `summary` function:
 
 ```{R summary_trait, comment=NA, eval=TRUE}
 print(summary(gwas.small$MAPPED_TRAIT))
 ```
 
-That's not bad, but a figure is almost always more effective than a table 
-for gaining insight. Let's create one using the `ggplot2` package, which 
-has emerged as the most popular approach for plotting in R because it
-is easy to use (after getting a hang of the unconventional interface) and
-powerful.
+That's not bad, but a figure is usually effective than a table for gaining 
+insight into the data. Let's create a figure using the `ggplot2` package. 
+[ggplot](http://ggplot2.org) has emerged as the most widely used approach for 
+plotting in R because it is powerful and easy to use (after getting a hang of 
+the admittedly unconventional interface).
 
-```{R trait_summary_plot, fig.height=7.5, eval=TRUE}
+Let's first create the plot, and then we will try to understand what the code
+is doing.
+
+```{R trait_summary_plot, fig.height=7.5, fig.width=7.5, eval=TRUE}
 library(ggplot2)
 print(ggplot(gwas.small,aes(MAPPED_TRAIT)) +
   geom_bar(fill = "darkorange",width = 0.5) + 
+  scale_y_continuous(breaks = seq(0,2000,250)) +
   coord_flip() +
   theme_minimal() +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()))
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()))
 ```
 
-It is difficult to understand how `ggplot` works with one example, and
-we won't attempt to do that here. Here are a few messages to take away from
-this example:
+It is difficult to understand how `ggplot` works with one example. 
+If this your first exposure to ggplot, here is what I suggest you take away
+from this example:
 
 + It is most natural to use `ggplot` with data frames; the `aes` function
-  tells `ggplot` which columns to visualize.
+  tells `ggplot` which columns of the data frame to visualize. For a bar
+  chart, there is only one variable to visualize, so we only list one column,
+  `aes(MAPPED_TRAIT)`.
   
 + After the `geom_bar` call, the rest of the function calls adjust
   the properties of the figure, and aren't necessary.
+  
+**Followup exercise 1:** Try removing and re-including the lines after 
+the call to `geom_bar()` to see what effect these lines have on the 
+plot. Make sure to remove the last plus sign from your code otherwise
+R will report a parsing error. Also refer to the 
+[online ggplot reference](http://docs.ggplot2.org/current).
 
-**Exercise:** Use the `reorder` function to create a new bar plot 
-in which the traits are listed in increasing or decreasing order by 
-the number of associations.
+**Followup exercise 2:** Use the `reorder` function to manipulate the 
+`MAPPED_TRAIT` column in the `gwas.small` data frame, then use this data frame
+to create a new bar  plot in which the traits are listed in increasing or 
+decreasing order by the number of associations.
 
 ## Defining a function to efficiently reuse code
 
