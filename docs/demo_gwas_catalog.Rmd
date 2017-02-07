@@ -196,7 +196,7 @@ I want to save the results of my R session. This is optional.
 
 Once you are in R, let's print the first 5 rows of the Iris data table:
 
-```{R iris, comment=NA, eval=FALSE}
+```{R iris, comment=NA, eval=TRUE}
 print(head(iris,n = 5))
 ```
 
@@ -457,7 +457,7 @@ which contains the first 100 rows of the GWAS Catalog table. Here, we
 instead read the data into a "data frame" in R. The data frame is R's 
 standard data structure for storing and working with tables:
 
-```{r read_data, warning=FALSE, eval=FALSE, comment=NA}
+```{r read_data, warning=FALSE, eval=TRUE, comment=NA}
 library(readr)
 gwas <- read_tsv("../data/gwas_catalog.tsv",na = c("","NA","NR"))
 gwas <- as.data.frame(gwas,stringsAsFactors = FALSE)
@@ -492,7 +492,7 @@ Now that we have the data loaded into the working environment, we can
 inspect it. Here are a couple simple commands that I commonly use to 
 get an overview of the data:
 
-```{R table_properties, results="hold", comment=NA, eval=FALSE}
+```{R table_properties, results="hold", comment=NA, eval=TRUE}
 
 # Number of rows and columns in the table.
 print(nrow(gwas))
@@ -509,7 +509,7 @@ print(tail(gwas,n = 5))
 
 We can also look at individual columns of the table; e.g.,
 
-```{R inspect_table_cols, comment=NA, eval=FALSE}
+```{R inspect_table_cols, comment=NA, eval=TRUE}
 x <- gwas[["MAPPED_GENE"]]
 print(head(x,n = 20))
 ```
@@ -526,7 +526,7 @@ We certainly don't have time to look closely at all the GWAS Catalog data.
 But we can at least start by looking closely at the "MAPPED_TRAIT" column, 
 which records the relevant disease or trait:
 
-```{R chromosome_inspect, comment=NA, eval=FALSE}
+```{R chromosome_inspect, comment=NA, eval=TRUE}
 
 # Typically, the "summary" function is useful. However, our first attempt at 
 # summarizing the MAPPED_TRAIT column doesn't yield much useful information
@@ -595,7 +595,7 @@ For the remainder, we will work with `gwas.small` only.
 Counting the number of mapped genetic associations per trait is as simple 
 as calling the `summary` function:
 
-```{R summary_trait, comment=NA, eval=FALSE}
+```{R summary_trait, comment=NA, eval=TRUE}
 print(summary(gwas.small$MAPPED_TRAIT))
 ```
 
@@ -608,7 +608,7 @@ the admittedly unconventional interface).
 Let's first create the plot, and then we will try to understand what the code
 is doing.
 
-```{R trait_summary_plot, fig.height=7.5, fig.width=7.5, eval=FALSE}
+```{R trait_summary_plot, fig.height=7.5, fig.width=7.5, eval=TRUE}
 library(ggplot2)
 print(ggplot(gwas.small,aes(MAPPED_TRAIT)) + geom_bar() + coord_flip())
 ```
@@ -618,7 +618,7 @@ Here we generated complex plot was generated with only one line of code.
 Let's adjust the ggplot settings a bit to make the the figure a little easier 
 to read.
 
-```{R trait_summary_plot2, fig.height=7.5, fig.width=7.5, eval=FALSE}
+```{R trait_summary_plot2, fig.height=7.5, fig.width=7.5, eval=TRUE}
 library(ggplot2)
 print(ggplot(gwas.small,aes(MAPPED_TRAIT)) +
   geom_bar(fill = "darkorange",width = 0.5) + 
@@ -734,20 +734,20 @@ Now that we have defined the `trait_scatterplot` function, let's apply it
 to a few diseases/traits with different *p*-value cutoffs. We begin with 
 Crohn's disease because it is one of the most successful GWAS examples: 
 
-```{R scatterplot_cd, warning=FALSE, eval=FALSE}
+```{R scatterplot_cd, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "Crohn's disease",max.pvalue = 1e-12))
 ```
 
 Multiple sclerosis has also been the subject of several large GWAS studies:
 
-```{R scatterplot_ms, warning=FALSE, eval=FALSE}
+```{R scatterplot_ms, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "multiple sclerosis",max.pvalue = 1e-8))
 ```
 
 Another interesting example is schizophrenia, a highly complex condition that
 has yielded a few surprises in GWAS studies:
 
-```{R scatterplot_scz, warning=FALSE, eval=FALSE}
+```{R scatterplot_scz, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "schizophrenia",max.pvalue = 1e-10))
 ```
 
@@ -759,6 +759,6 @@ diseases or traits.
 Record some of the R settings used when this document was created. This is 
 helpful for making the results easier for others to reproduce.
 
-```{R session_Info, eval=FALSE}
+```{R session_Info, eval=TRUE}
 sessionInfo()
 ```
