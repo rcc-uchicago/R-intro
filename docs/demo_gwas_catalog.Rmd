@@ -13,7 +13,9 @@ output:
 
 # About this document
 
-This is an R Markdown Notebook.
+This is an R Markdown Notebook, or a document (e.g., PDF) generated from
+an R Markdown Notebook.
+
 [R Markdown](http://r4ds.had.co.nz/r-markdown.html) combines
 [Markdown](http://daringfireball.net/projects/markdown), a popular,
 easy-to-read plain text formatting syntax, with "chunks" of R
@@ -40,6 +42,10 @@ For background on the GWAS Catalog, see the
 summary of the data. 
 
 # How to use this document
+
+**Note:** Skip this section if you are viewing the HTML or PDF file; it is
+only relevant if you are viewing the original R Markdown file 
+(`demo_gwas_catalog.Rmd`).
 
 There are several ways to use this document:
 
@@ -76,7 +82,7 @@ consider helping your neighbors.
 There are several options for setting up your R programming environment. 
 In this section, we will explore some of the R environment options that are 
 available on the [midway compute cluster](https://rcc.uchicago.edu/docs) and 
-on your laptop. *No single option is best for everyone.*
+on your laptop. **No single option is best for everyone.**
 
 ## R on your laptop
 
@@ -93,8 +99,8 @@ I recommend installing both R and RStudio.
 
 3. Try running R and RStudio on your computer. You can also try running
    R from a command-line shell (e.g., [iTerm2](https://iterm2.com) on Mac, 
-  [Cygwin](http://www.cygwin.com) on Windows). To do so, simply type `R`,
-  and hit the enter key.
+   [Cygwin](http://www.cygwin.com) on Windows). To do so, enter into
+   command-line shell software, then simply type `R`, and hit the enter key.
 
 4. Test your R graphics setup; e.g., try copying and pasting the code chunk 
    below into R or RStudio. in RStudio, this will (by default) draw the plot
@@ -151,8 +157,10 @@ metal contact:
 Log on to midway2 using ssh:
 
 ```{bash eval=FALSE}
-ssh -X username@midway2.rcc.uchicago.edu
+ssh username@midway2.rcc.uchicago.edu
 ```
+
+Enter your password when requested.
 
 If you do not have an ssh program, or you are not sure how to access it,
 move to the next section, "R on midway with graphics".
@@ -184,7 +192,7 @@ R --no-save
 ```
 
 I include the `--no-save` flag because I don't like being asked whether
-I want to save the results of my R session, but this is optional.
+I want to save the results of my R session. This is optional.
 
 Once you are in R, let's print the first 5 rows of the Iris data table:
 
@@ -217,22 +225,23 @@ e.g., `Rscript my_analysis.R`.
 
 ## R on midway with graphics
 
-We have already explored R with graphics on your computer. How can we
+Above we explored R with graphics on your computer. How can we
 visualize data in R on the *midway* compute cluster? There are several 
 ways to do this. The recommended approach is to run R or RStudio in
 [ThinLinc](http://www.cendio.com/thinlinc). Although the ThinLinc graphics
-are not always crisp, it is the most reliable solution on our cluster.
+are not always crisp, it is currently the most reliable solution on our 
+cluster, and therefore the recommended option.
 
 1. Log in to ThinLinc. The simplest option is to use the 
 [Web interface](http://midway.rcc.uchicago.edu). However, one drawback is that
 it doesn't support copying and pasting very well. See 
 [here](https://rcc.uchicago.edu/docs/connecting) for more information 
-on connecting to midway using ThinLinc.
+on connecting to midway using ThinLinc, and downloading the ThinLinc client.
 
 2. Open up a ROXTerm window by clicking the icon at the bottom that looks
    like a computer monitor.
 
-3. Connect to midway2 with X forwarding:
+3. Connect to midway2 with secure X forwarding:
 
 ```{bash thinlinc_midway2, eval=FALSE}
 ssh -Y midway2-login1.rcc.uchicago.edu
@@ -261,14 +270,13 @@ print(xyplot(dist ~ speed,cars,pch = 20,
 Now that we have explored several different R environment options, please
 choose one of them for the remainder of the workshop. You will need an
 environment that can generate graphics. The recommended option is to run
-R or RStudio on *midway* because we have already installed the packages that
-are necessary to complete this workshop.
+R or RStudio on *midway*.
 
-In this section, we will download, or *clone*, all the files from the Github
+In this section, we will download, or "clone", all the files from the Github
 repository. There are several ways this can be done:
 
 1. Go to the [Github webpage](http://github.com/rcc-uchicago/R-intro) and 
-   click the green "clone or download" button.
+   click the green "Clone or download" button.
 
 2. Download and unzip a ZIP file containing the entire repository 
    (this may only work on the compute cluster):
@@ -334,8 +342,8 @@ R-intro/
 # Setting the working directory in your R programming environment
 
 Now return to your preferred R environment, either on your computer, or 
-on the compute cluster. If you have exited, please repeat the steps above
-to start a new environment.
+on the compute cluster. If you have exited R, please repeat the steps above
+to start a new R environment.
 
 To perform the data analysis, we need to make sure that our R
 environment points to the `docs` folder of our project directory. 
@@ -350,7 +358,7 @@ setwd("~/projects/R-intro/docs")
 Alternatively, RStudio has a "Set Working Directory" option in the "Session"
 menu.
 
-You can find out what your working by typing `getwd()`.
+You can find out what your working directory is by typing `getwd()`.
 
 We are almost done with setting up our R environment. The last step is
 to install some packages used in the data analysis.
@@ -358,22 +366,52 @@ to install some packages used in the data analysis.
 # Installing and loading the packages
 
 In R, a package is a set of functions, data sets, and other materials, 
-that are bundled together. As of this writing, over 10,000 R packages have
-been developed. The ease of installing and using packages is one of the 
-reasons R has become so popular. Therefore, it is helpful to understand 
-the steps in installing and loading packages.
+that are bundled together. As of this writing, over 10,000 packages have
+been developed and released. The ease of installing and using packages is 
+one of the reasons R has become so popular. Therefore, it is helpful to 
+understand the steps in installing and loading packages.
 
 Some packages are already available in your environment when you start R. 
-One example is  the `stats` package because it contains basic functions 
-that are widely used in statistical calculations.
+One example is  the `stats` package.
 
-```{R packages, eval=FALSE}
-rmarkdown
-readr
-ggplot2
+In this workshop, we make use of 3 packages: `rmarkdown` to render this 
+notebook into another document format; `readr` to quickly read the GWAS
+Catalog data; and `ggplot2` to visualize the data.
+
+First, check to see if these packages are already installed. If they are not,
+these commands will report an error:
+
+```{R check_packages, eval=FALSE}
+help(package = rmarkdown)
+help(package = readr)
+help(package = ggplot2)
 ```
 
-*Add instructions here for installing the required packages.*
+If any of the packages are missing, you can install them using the 
+`install.packages()` function. Even if they are available, I suggest
+running these commands anyhow to get some practice installing packages.
+This will also ensure you have the most up-to-date package version.
+
+```{R install_packages, eval=FALSE}
+install.packages("rmarkdown")
+install.packages("readr")
+install.packages("ggplot2")
+```
+
+There are many ways in which `install.packages()` will not work; it
+is difficult to anticipate all the possible errors that can occur. If you are
+stuck, please ask for help.
+
+Once you have successfully installed the packages, load these packages 
+into your R environment with the `library` function:
+
+```{R load_packages, eval=TRUE}
+library(rmarkdown)
+library(readr)
+library(ggplot2)
+```
+
+If you don't see an error, then the packages were loaded successfully.
 
 # Executing the R code
 
@@ -420,7 +458,7 @@ Now that we have the data loaded into the working environment, we can
 inspect it. Here are a couple simple commands that are commonly used to 
 get an overview of the data:
 
-```{R table_properties, results="hold", comment=NA}
+```{R table_properties, results="hold", comment=NA, eval=TRUE}
 
 # Number of rows and columns in the table.
 print(nrow(gwas))
@@ -441,7 +479,7 @@ We certainly don't have time to look closely at all the GWAS Catalog data.
 But we can at least start by looking closely at the "MAPPED_TRAIT" column, 
 which indicates which disease or trait was being studied:
 
-```{R chromosome_inspect, comment=NA}
+```{R chromosome_inspect, comment=NA, eval=TRUE}
 
 # Our first attempt at summarizing the MAPPED_TRAIT column doesn't yield
 # much insight.
@@ -499,7 +537,7 @@ For the remainder, we will work with `gwas.small` only.
 Counting the number of genetic associations per disease/trait is as simple 
 as calling the `summary` function:
 
-```{R summary_trait, comment=NA}
+```{R summary_trait, comment=NA, eval=TRUE}
 print(summary(gwas.small$MAPPED_TRAIT))
 ```
 
@@ -509,7 +547,7 @@ has emerged as the most popular approach for plotting in R because it
 is easy to use (after getting a hang of the unconventional interface) and
 powerful.
 
-```{R trait_summary_plot, fig.height=7.5}
+```{R trait_summary_plot, fig.height=7.5, eval=TRUE}
 library(ggplot2)
 print(ggplot(gwas.small,aes(MAPPED_TRAIT)) +
   geom_bar(fill = "darkorange",width = 0.5) + 
@@ -545,7 +583,7 @@ code to generate each plot.
 A key concept in R is that *we can define a variable in our environment
 that is a function.* We will call this function `trait_scatterplot`:
 
-```{R define_trait_scatterplot}
+```{R define_trait_scatterplot, eval=TRUE}
 trait_scatterplot <- function (trait, max.pvalue) {
 
   # Colours and symbols I like using.
@@ -589,15 +627,15 @@ trait_scatterplot <- function (trait, max.pvalue) {
 }
 ```
 
-```{R scatterplot_cd, warning=FALSE}
+```{R scatterplot_cd, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "Crohn's disease",max.pvalue = 1e-12))
 ```
 
-```{R scatterplot_ms, warning=FALSE}
+```{R scatterplot_ms, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "multiple sclerosis",max.pvalue = 1e-8))
 ```
 
-```{R scatterplot_scz, warning=FALSE}
+```{R scatterplot_scz, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "schizophrenia",max.pvalue = 1e-10))
 ```
 
@@ -605,6 +643,6 @@ print(trait_scatterplot(trait = "schizophrenia",max.pvalue = 1e-10))
 
 *Explain here what this does. Useful for reproducibility.*
 
-```{R session_Info}
+```{R session_Info, eval=TRUE}
 sessionInfo()
 ```
