@@ -27,7 +27,12 @@ provides results from thousands of [genome-wide association
 studies](http://dx.doi.org/10.1001/jama.299.11.1335) of 
 inherited diseases and completx traits. My aim in using the GWAS Catalog 
 is to illustrate using R to process and analyze large-scale, complex 
-tabular data.
+tabular data. 
+
+Importantly, the GWAS Catalog is very "messy" data; consider
+that hundreds of people have inputted data into the database, with only 
+partial checks on data quality. In our analyses, we will have to manipulate 
+and filter the data in order to make sense of it.
 
 For background on the GWAS Catalog, see the 
 [GWAS Catalog paper](http://doi.org/10.1093/nar/gkt1229). See also the 
@@ -332,13 +337,13 @@ on the compute cluster. If you have exited, please repeat the steps above
 to start a new environment.
 
 To perform the data analysis, we need to make sure that our R
-environment points to the `analysis` folder of our project directory. 
+environment points to the `docs` folder of our project directory. 
 One way to do this is using the `setwd` function in R. For example, if 
 the `R-intro` files are in the `projects` folder in my home directory, 
 do the following in R or RStudio:
 
 ```{R setwd, eval=FALSE}
-setwd("~/projects/R-intro")
+setwd("~/projects/R-intro/docs")
 ```
 
 Alternatively, RStudio has a "Set Working Directory" option in the "Session"
@@ -349,7 +354,7 @@ You can find out what your working by typing `getwd()`.
 We are almost done with setting up our R environment. The last step is
 to install some packages used in the data analysis.
 
-# Installing and using the packages
+# Installing and loading the packages
 
 In R, a package is a set of functions, data sets, and other materials, 
 that are bundled together. As of this writing, over 10,000 R packages have
@@ -363,6 +368,8 @@ that are widely used in statistical calculations.
 
 ```{R packages, eval=FALSE}
 rmarkdown
+readr
+ggplot2
 ```
 
 *Add instructions here for installing the required packages.*
@@ -374,20 +381,122 @@ RStudio, and using the RMarkdown command.**
 
 ## Reading the data into the R environment
 
-The GWAS data set is a large table with 35,077 rows and X columns. It
+The GWAS data set is a large table with 35,077 rows and 37 columns. It
 could conceivably be opened in Excel. To illustrate this, open the
 [gwas_catalog_small.xlsx](/data/gwas_catalog_small.xlsx) Excel
 spreadsheet, which contains the first 100 rows of the GWAS Catalog
 table.
 
-```{r read_data}
-plot(cars)
+Items: (1) How data are stored in text file; (2) new variable created
+in the environment, `gwas`; (3) `help(read.table)`; (4) what does this
+function do?
+
+```{r read_data, warning=FALSE, results="hold", comment=NA}
+library(readr)
+gwas <- read_tsv("../data/gwas_catalog.tsv",na = c("","NA","NR"))
+gwas <- as.data.frame(gwas,stringsAsFactors = FALSE)
+print(colnames(gwas))
 ```
 
-## (Another section goes here)
+## Inspecting the data
 
-* Add content for another section, as needed.*
+```{R table_properties, results="hold", comment=NA}
+
+# Number of rows and columns in the table.
+print(nrow(gwas))
+print(ncol(gwas))
+```
+
+```{R more_table_properties, eval=FALSE}
+# Inspect the first 6 rows.
+print(head(gwas))
+
+# Inspect the last 6 rows.
+print(tail(gwas))
+```
+
+Looking at the chromosome column in more detail:
+
+```{R chromosome_inspect, comment=NA}
+
+# Doesn't say much useful.
+print(summary(gwas[["CHR_ID"]]))
+
+# What if we convert to a categorical variable?
+chr <- factor(gwas[["CHR_ID"]])
+print(summary(chr,maxsum = 40))
+
+# Second attempt; only retain entries that are 1-22 and X.
+chr <- factor(gwas[["CHR_ID"]],levels = c(1:22,"X"))
+print(summary(chr))
+```
+
+## Creating a simple visual summary of the data
+
+```{R chromosome_plot}
+library(ggplot2)
+gwas[["CHR_ID"]] <- chr
+print(ggplot(gwas,aes(CHR_ID)) +
+  geom_bar(fill = "dodgerblue",width = 0.5) + 
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()))
+```
+
+## Looking at the relationship between two columns for a given disease:
+
+Demonstrate definition of a function.
+
+```{R effect_sizes, comment=NA, warning=FALSE}
+
+# Extract the two columns we are interested in.
+tbl <- data.frame(x = gwas[["OR or BETA"]],
+                  y = log10(as.numeric(gwas[["RISK ALLELE FREQUENCY"]])),
+                  z = log10(gwas[["P-VALUE"]]),
+                  a = factor(gwas[["STUDY ACCESSION"]]),
+                  trait = gwas$MAPPED_TRAIT,
+                  gene = gwas$MAPPED_GENE,
+                  hla = factor(grepl("HLA",gwas[["REPORTED GENE(S)"]]),
+                               c("TRUE","FALSE"),c("HLA","")))
+tbl <- subset(tbl,trait == "schizophrenia")
+tbl <- subset(tbl,z < (-10))
+tbl$a <- factor(as.charcter(tbl$a))
+
+# First attempt at a summary of effect sizes; turns out to not be very 
+# informative.
+print(summary(tbl$x))
+
+# An attempt at a more informative summary of effect sizes.
+print(quantile(tbl$x,probs = seq(0,1,0.1),na.rm = TRUE))
+
+# Based on this, let's "clean up" the strange values of the effect sizes.
+rows <- with(tbl,which(x <= 0 | x > 4))
+tbl[rows,"x"] <- NA
+
+# First attempt at summary of p-values.
+print(summary(tbl$y))
+
+# Not bad; let's look at the distribution of p-values in a little more 
+# detail.
+print(quantile(tbl$y,probs = seq(0,1,0.1),na.rm = TRUE))
+
+# We need to remove the non-finite values.
+rows <- which(tbl$y < (-4))
+tbl[rows,"y"] <- NA
+
+summary(lm(y ~ x,tbl))
+
+print(ggplot(tbl,aes(x = x,y = y,color = a,label = hla)) +
+  geom_point(size = 2) + 
+  geom_text(size = 2.5,hjust = "left",vjust = "top",nudge_x = 0.025,col="black") + 
+  theme_minimal())
+
+```
 
 ## About this document
 
-*Add session info.*
+*Explain here what this does. Useful for reproducibility.*
+
+```{R session_Info}
+sessionInfo()
+```
