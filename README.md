@@ -73,6 +73,8 @@ By the end of this workshop, you should be more comfortable with:
 
 ## Other useful resources
 
++ [Workshop slides](assets/slides.pdf)
+
 + [Software Carpentry](http://software-carpentry.org/lessons)
   
 * [Data Carpentry](http://www.datacarpentry.org/lessons)
