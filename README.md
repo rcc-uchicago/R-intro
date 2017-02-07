@@ -59,13 +59,19 @@ and follow the steps there.
 
 ## Aims
 
-*Description of workshop aims goes here.*
+By the end of this workshop, you should be more comfortable with:
 
-## Outline
++ Setting up your computing environment for interactive programming in R.
 
-*Give outline of workshop here.*
++ Installing and using packages.
 
-## Other resources
++ Working with "R notebooks".
+
++ Executing R code, and build notebooks into sharable documents.
+
++ Implementing simple data analysis steps by example.
+
+## Other useful resources
 
 + [Software Carpentry](http://software-carpentry.org/lessons)
   
