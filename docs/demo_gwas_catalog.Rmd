@@ -168,7 +168,7 @@ move to the next section, "R on midway with graphics".
 To illustrate "best practice", we will request an **interactive session** to allocate computational resources for our computations in R:
 
 ```{bash eval=FALSE}
-sinteractive --time=02:00:00 --mem=2G --reservation=r_workshop
+sinteractive --time=02:00:00 --mem=2G --partition=broadwl --reservation=r_workshop
 ```
 
 Outside the workshop, you will have to remove the `--reservation=r_workshop`
@@ -509,7 +509,7 @@ print(tail(gwas,n = 5))
 
 We can also look at individual columns of the table; e.g.,
 
-```{R inspect_table_cols, eval=TRUE}
+```{R inspect_table_cols, comment=NA, eval=TRUE}
 x <- gwas[["MAPPED_GENE"]]
 print(head(x,n = 20))
 ```
@@ -610,6 +610,16 @@ is doing.
 
 ```{R trait_summary_plot, fig.height=7.5, fig.width=7.5, eval=TRUE}
 library(ggplot2)
+print(ggplot(gwas.small,aes(MAPPED_TRAIT)) + geom_bar() + coord_flip())
+```
+
+Here we generated complex plot was generated with only one line of code. 
+
+Let's adjust the ggplot settings a bit to make the the figure a little easier 
+to read.
+
+```{R trait_summary_plot2, fig.height=7.5, fig.width=7.5, eval=TRUE}
+library(ggplot2)
 print(ggplot(gwas.small,aes(MAPPED_TRAIT)) +
   geom_bar(fill = "darkorange",width = 0.5) + 
   scale_y_continuous(breaks = seq(0,2000,250)) +
@@ -619,22 +629,21 @@ print(ggplot(gwas.small,aes(MAPPED_TRAIT)) +
         panel.grid.minor.y = element_blank()))
 ```
 
-It is difficult to understand how `ggplot` works with one example. 
-If this your first exposure to ggplot, here is what I suggest you take away
-from this example:
+It is difficult to understand how `ggplot` works with one example. If this 
+your first exposure to ggplot, here is what I suggest you take away from this 
+example:
 
-+ It is most natural to use `ggplot` with data frames; the `aes` function
++ `ggplot` works most effectively with data frames; the `aes()` function
   tells `ggplot` which columns of the data frame to visualize. For a bar
-  chart, there is only one variable to visualize, so we only list one column,
-  `aes(MAPPED_TRAIT)`.
+  chart, there is only one variable to visualize, hence `aes(MAPPED_TRAIT)`.
   
-+ After the `geom_bar` call, the rest of the function calls adjust
++ After the `geom_bar()` call, the rest of the function calls adjust
   the properties of the figure, and aren't necessary.
   
 **Followup exercise 1:** Try removing and re-including the lines after 
-the call to `geom_bar()` to see what effect these lines have on the 
-plot. Make sure to remove the last plus sign from your code otherwise
-R will report a parsing error. Also refer to the 
+the call to `geom_bar()` in the second chunk to see what effect these lines 
+have on the plot. Make sure to remove the last plus sign from your code 
+otherwise R will report a parsing error. Also refer to the 
 [online ggplot reference](http://docs.ggplot2.org/current).
 
 **Followup exercise 2:** Use the `reorder` function to manipulate the 
@@ -642,28 +651,49 @@ R will report a parsing error. Also refer to the
 to create a new bar  plot in which the traits are listed in increasing or 
 decreasing order by the number of associations.
 
-## Defining a function to efficiently reuse code
+## Defining a function to reuse code
 
-So far, we have focused on getting broad-level summaries of the 
-GWAS Catalog data. In this final portion of our data analysis, we want 
-to create plots that yield more detailed understanding of individual 
-traits. I would like to create the same type of plot that could be
-applied to multiple traits without having to rewrite same or similar
-code to generate each plot.
+So far, we have focused on broad-level summaries of the GWAS Catalog data. 
+In this final portion of our data analysis, we will create plots that 
+yield more detailed understanding of individual traits. Importantly, we will 
+create the same type of plot that is applied to multiple traits. We would like
+to do this without having to (tediously) rewrite the similar code to generate 
+each plot.
 
-A key concept in R is that *we can define a variable in our environment
-that is a function.* We will call this function `trait_scatterplot`:
+Because R implements some aspects of *functional programming*, **we can define
+a variable in our environment that is a function.* This may sound like a strange
+idea, but it is actually one of the core concepts in programming languages. 
+An in-depth look at functional programming ideas is beyond the scope of this 
+workshop, but hopefully this example will suffice for illustrating how to
+define create reusable code.
+
+I define a function `trait_scatterplot` that takes two inputs, `trait` and
+`max.pvalue`. Don't bother understanding the code in the body of the function.
+See the comments at the top of the code chunk for an explanation of what this 
+function does.
 
 ```{R define_trait_scatterplot, eval=TRUE}
+
+# Create a scatterplot of the associations for a given trait, showing
+# the "effect size" (beta or odds ratio) in the horizontal axis, and
+# the risk allele frequency in the vertical axis (on the logarithmic
+# scale). To limit the plot to high-quality GWAS results, I select
+# only the rows of the table with p-values less than "max.pvalue."
+# I also want to distinguish the different studies of the same trait in
+# the plot.
+#
+# Since many strong genetic associations map to HLA genes, especially
+# in autoimmune diseases, I flag the associations that map to the HLA
+# region on chromosome 6.
 trait_scatterplot <- function (trait, max.pvalue) {
 
   # Colours and symbols I like using.
-  clrs   <- rep(c("darkorange","dodgerblue","forestgreen","red","navyblue",
-                  "gold","yellowgreen","darkviolet","magenta","cyan"),
-                times = 4)
+  clrs   <- rep(c("darkorange","dodgerblue","forestgreen","red",
+                  "navyblue","gold","yellowgreen","darkviolet",
+                  "magenta","cyan"),times = 4)
   shapes <- rep(c(20,1,2,4),each = 10)
 
-  # Change the "P-VALUE"" column to "PVALUE".
+  # Change the name of the "P-VALUE" column to "PVALUE".
   i <- which(colnames(gwas.small) == "P-VALUE")
   colnames(gwas.small)[i] <- "PVALUE"
   
@@ -672,9 +702,9 @@ trait_scatterplot <- function (trait, max.pvalue) {
               MAPPED_TRAIT == trait &
               as.numeric(PVALUE) < max.pvalue)
 
-  # Extract the columns we are interested in: the effect size ("odds ratio or 
-  # beta"), the frequency of the risk allele, the study id, and a label
-  # indicating whether the association maps to HLA genes.
+  # Extract the columns we are interested in: the effect size ("odds 
+  # ratio or beta"); the frequency of the risk allele; the study id; 
+  # and a label indicating whether the association maps to HLA genes.
   x <- data.frame(
          effect.size = x[["OR or BETA"]],
          allele.freq = log10(as.numeric(x[["RISK ALLELE FREQUENCY"]])),
@@ -688,31 +718,46 @@ trait_scatterplot <- function (trait, max.pvalue) {
                       color = study,
                       shape = study,
                       label = hla)) +
-    geom_point(size = 2) + 
-    geom_text(size = 2.5,hjust = "left",vjust = "top",col = "black") + 
+    geom_point(size = 2.5) + 
+    geom_text(size = 2.75,hjust = "left",vjust = "top",col = "black") + 
     scale_color_manual(values = clrs) +
     scale_shape_manual(values = shapes) +
     theme_minimal() +
     theme(panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank()))
+          panel.grid.minor = element_blank()) +
+    labs(title = paste("GWAS Catalog associations for",trait,
+                       "with p-value <",max.pvalue)))
 }
 ```
+
+Now that we have defined the `trait_scatterplot` function, let's apply it
+to a few diseases/traits with different *p*-value cutoffs. We begin with 
+Crohn's disease because it is one of the most successful GWAS examples: 
 
 ```{R scatterplot_cd, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "Crohn's disease",max.pvalue = 1e-12))
 ```
 
+Multiple sclerosis has also been the subject of several large GWAS studies:
+
 ```{R scatterplot_ms, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "multiple sclerosis",max.pvalue = 1e-8))
 ```
+
+Another interesting example is schizophrenia, a highly complex condition that
+has yielded a few surprises in GWAS studies:
 
 ```{R scatterplot_scz, warning=FALSE, eval=TRUE}
 print(trait_scatterplot(trait = "schizophrenia",max.pvalue = 1e-10))
 ```
 
+**Followup exercise:** Try using the `trait_scatterplot` function for other
+diseases or traits.
+
 # About this document
 
-*Explain here what this does. Useful for reproducibility.*
+Record some of the R settings used when this document was created. This is 
+helpful for making the results easier for others to reproduce.
 
 ```{R session_Info, eval=TRUE}
 sessionInfo()
