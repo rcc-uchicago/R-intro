@@ -452,10 +452,10 @@ is to copy & paste the individual chunks, or lines of code, into the R console.
 
 The GWAS Catalog data set is a large table with 35,077 rows and 37 columns. 
 It could conceivably be opened in Excel. To illustrate this, open the
-[gwas_catalog_small.xlsx](/data/gwas_catalog_small.xlsx) spreadsheet, 
+[gwas_catalog_small.xlsx](../data/gwas_catalog_small.xlsx) spreadsheet, 
 which contains the first 100 rows of the GWAS Catalog table. Here, we 
-instead read the data into a "data frame" in R, which is R's standard data
-structure for storing and working with tables:
+instead read the data into a "data frame" in R. The data frame is R's 
+standard data structure for storing and working with tables:
 
 ```{r read_data, warning=FALSE, eval=TRUE, comment=NA}
 library(readr)
@@ -464,7 +464,7 @@ gwas <- as.data.frame(gwas,stringsAsFactors = FALSE)
 print(colnames(gwas))
 ```
 
-A lot is going on in just a few lines of code. I here are only a few of the 
+A lot is going on in this small chunk of code. Here are a few of the 
 many things that are important to know about these few lines of code:
 
 + We call a function `read_tsv` that is defined in the `readr` package.
@@ -472,15 +472,19 @@ many things that are important to know about these few lines of code:
   tab-delimited text format. You can learn more about this function by 
   typing `help(read_tsv)`.
   
-+ We assign the output of this function to a variable called "gwas". This
++ We assign the output of this function to a variable called `gwas`. This
   creates a new variable in our working environment. Type `ls()` to get
   the list of variables in the current environment.
   
 + Since the output from `read_tsv` is not a data frame, and we would like
-  to work with a data frame, we convert it using the `as.data.frame` function.
+  to work with a data frame, we convert it to a data frame using the 
+  `as.data.frame` function. By default, this function automatically converts
+  "strings" (text) to "factors" (categorical variables), which we don't want
+  (one of the many annoying default behaviours of R), so we set 
+  `stringsAsFactors = FALSE`.
   
-+ The third line accesses a property of the data frame: the names of the
-  columns in the table, or "data frame".
++ The third line accesses a property of the data frame, the names of the
+  columns.
 
 ## Inspecting the data
 

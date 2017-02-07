@@ -430,7 +430,7 @@ render(&quot;demo_gwas_catalog.Rmd&quot;,
 <p>Now that we have successfully run the code, we are now ready to walk through the analysis steps in some detail. The simplest way to walk through the code is to copy &amp; paste the individual chunks, or lines of code, into the R console.</p>
 <div id="reading-the-data-into-the-r-environment" class="section level2">
 <h2><span class="header-section-number">11.1</span> Reading the data into the R environment</h2>
-<p>The GWAS Catalog data set is a large table with 35,077 rows and 37 columns. It could conceivably be opened in Excel. To illustrate this, open the <a href="/data/gwas_catalog_small.xlsx">gwas_catalog_small.xlsx</a> spreadsheet, which contains the first 100 rows of the GWAS Catalog table. Here, we instead read the data into a “data frame” in R, which is R’s standard data structure for storing and working with tables:</p>
+<p>The GWAS Catalog data set is a large table with 35,077 rows and 37 columns. It could conceivably be opened in Excel. To illustrate this, open the <a href="../data/gwas_catalog_small.xlsx">gwas_catalog_small.xlsx</a> spreadsheet, which contains the first 100 rows of the GWAS Catalog table. Here, we instead read the data into a “data frame” in R, which is R’s standard data structure for storing and working with tables:</p>
 <pre class="r"><code>library(readr)
 gwas &lt;- read_tsv(&quot;../data/gwas_catalog.tsv&quot;,na = c(&quot;&quot;,&quot;NA&quot;,&quot;NR&quot;))</code></pre>
 <pre><code>Parsed with column specification:
