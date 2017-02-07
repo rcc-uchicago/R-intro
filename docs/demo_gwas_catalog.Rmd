@@ -374,12 +374,12 @@ ggplot2
 
 *Add instructions here for installing the required packages.*
 
-## Executing the R code
+# Executing the R code
 
 **Add instructions here for running the code; give instructions from
 RStudio, and using the RMarkdown command.**
 
-## Reading the data into the R environment
+# Reading the data into the R environment
 
 The GWAS Catalog data set is a large table with 35,077 rows and 37 columns. 
 It could conceivably be opened in Excel. To illustrate this, open the
@@ -413,7 +413,7 @@ many things that are important to know about these few lines of code:
 + The third line accesses a property of the data frame: the names of the
   columns in the table, or "data frame".
 
-## Inspecting the data
+# Inspecting the data
 
 Now that we have the data loaded into the working environment, we can 
 inspect it. Here are a couple simple commands that are commonly used to 
@@ -434,7 +434,7 @@ print(head(gwas,n = 5))
 print(tail(gwas,n = 5))
 ```
 
-## Manipulating the data
+# Manipulating the data
 
 We certainly don't have time to look closely at all the GWAS Catalog data.
 But we can at least start by looking closely at the "MAPPED_TRAIT" column, 
@@ -493,7 +493,7 @@ A few comments about this chunk of code:
 
 For the remainder, we will work with `gwas.small` only.
 
-## Creating a simple visual summary of the data
+# Creating a simple visual summary of the data
 
 Counting the number of genetic associations per disease/trait is as simple 
 as calling the `summary` function:
@@ -532,57 +532,75 @@ this example:
 in which the traits are listed in increasing or decreasing order by 
 the number of associations.
 
-## Looking at the relationship between two columns for a given disease:
+# Defining a function to efficiently reuse code
 
-Demonstrate definition of a function.
+So far, we have focused on getting broad-level summaries of the 
+GWAS Catalog data. In this final portion of our data analysis, we want 
+to create plots that yield more detailed understanding of individual 
+traits. I would like to create the same type of plot that could be
+applied to multiple traits without having to rewrite same or similar
+code to generate each plot.
 
-```{R effect_sizes, comment=NA, warning=FALSE, eval=FALSE}
+A key concept in R is that *we can define a variable in our environment
+that is a function.* We will call this function `trait_scatterplot`:
 
-# Extract the two columns we are interested in.
-tbl <- data.frame(x = gwas[["OR or BETA"]],
-                  y = log10(as.numeric(gwas[["RISK ALLELE FREQUENCY"]])),
-                  z = log10(gwas[["P-VALUE"]]),
-                  a = factor(gwas[["STUDY ACCESSION"]]),
-                  trait = gwas$MAPPED_TRAIT,
-                  gene = gwas$MAPPED_GENE,
-                  hla = factor(grepl("HLA",gwas[["REPORTED GENE(S)"]]),
-                               c("TRUE","FALSE"),c("HLA","")))
-tbl <- subset(tbl,trait == "schizophrenia")
-tbl <- subset(tbl,z < (-10))
-tbl$a <- factor(as.charcter(tbl$a))
+```{R define_trait_scatterplot}
+trait_scatterplot <- function (trait, max.pvalue) {
 
-# First attempt at a summary of effect sizes; turns out to not be very 
-# informative.
-print(summary(tbl$x))
+  # Colours and symbols I like using.
+  clrs   <- rep(c("darkorange","dodgerblue","forestgreen","red","navyblue",
+                  "gold","yellowgreen","darkviolet","magenta","cyan"),
+                times = 4)
+  shapes <- rep(c(20,1,2,4),each = 10)
 
-# An attempt at a more informative summary of effect sizes.
-print(quantile(tbl$x,probs = seq(0,1,0.1),na.rm = TRUE))
+  # Change the "P-VALUE"" column to "PVALUE".
+  i <- which(colnames(gwas.small) == "P-VALUE")
+  colnames(gwas.small)[i] <- "PVALUE"
+  
+  # Extract the rows we are interested in.
+  x <- subset(gwas.small,
+              MAPPED_TRAIT == trait &
+              as.numeric(PVALUE) < max.pvalue)
 
-# Based on this, let's "clean up" the strange values of the effect sizes.
-rows <- with(tbl,which(x <= 0 | x > 4))
-tbl[rows,"x"] <- NA
-
-# First attempt at summary of p-values.
-print(summary(tbl$y))
-
-# Not bad; let's look at the distribution of p-values in a little more 
-# detail.
-print(quantile(tbl$y,probs = seq(0,1,0.1),na.rm = TRUE))
-
-# We need to remove the non-finite values.
-rows <- which(tbl$y < (-4))
-tbl[rows,"y"] <- NA
-
-summary(lm(y ~ x,tbl))
-
-print(ggplot(tbl,aes(x = x,y = y,color = a,label = hla)) +
-  geom_point(size = 2) + 
-  geom_text(size = 2.5,hjust = "left",vjust = "top",nudge_x = 0.025,col="black") + 
-  theme_minimal())
-
+  # Extract the columns we are interested in: the effect size ("odds ratio or 
+  # beta"), the frequency of the risk allele, the study id, and a label
+  # indicating whether the association maps to HLA genes.
+  x <- data.frame(
+         effect.size = x[["OR or BETA"]],
+         allele.freq = log10(as.numeric(x[["RISK ALLELE FREQUENCY"]])),
+         study       = factor(x[["STUDY ACCESSION"]]),
+         hla         = factor(grepl("HLA",x[["REPORTED GENE(S)"]]),
+                              levels = c(FALSE,TRUE),labels = c("","HLA")))
+  
+  # The function's return value is a ggplot object. 
+  return(ggplot(x,aes(x     = effect.size,
+                      y     = allele.freq,
+                      color = study,
+                      shape = study,
+                      label = hla)) +
+    geom_point(size = 2) + 
+    geom_text(size = 2.5,hjust = "left",vjust = "top",col = "black") + 
+    scale_color_manual(values = clrs) +
+    scale_shape_manual(values = shapes) +
+    theme_minimal() +
+    theme(panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()))
+}
 ```
 
-## About this document
+```{R scatterplot_cd, warning=FALSE}
+print(trait_scatterplot(trait = "Crohn's disease",max.pvalue = 1e-12))
+```
+
+```{R scatterplot_ms, warning=FALSE}
+print(trait_scatterplot(trait = "multiple sclerosis",max.pvalue = 1e-8))
+```
+
+```{R scatterplot_scz, warning=FALSE}
+print(trait_scatterplot(trait = "schizophrenia",max.pvalue = 1e-10))
+```
+
+# About this document
 
 *Explain here what this does. Useful for reproducibility.*
 
