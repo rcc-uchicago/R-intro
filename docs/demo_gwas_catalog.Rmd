@@ -381,24 +381,43 @@ RStudio, and using the RMarkdown command.**
 
 ## Reading the data into the R environment
 
-The GWAS data set is a large table with 35,077 rows and 37 columns. It
-could conceivably be opened in Excel. To illustrate this, open the
-[gwas_catalog_small.xlsx](/data/gwas_catalog_small.xlsx) Excel
-spreadsheet, which contains the first 100 rows of the GWAS Catalog
-table.
+The GWAS Catalog data set is a large table with 35,077 rows and 37 columns. 
+It could conceivably be opened in Excel. To illustrate this, open the
+[gwas_catalog_small.xlsx](/data/gwas_catalog_small.xlsx) spreadsheet, 
+which contains the first 100 rows of the GWAS Catalog table. Here, we 
+instead read the data into a "data frame" in R, which is R's standard data
+structure for storing and working with tables:
 
-Items: (1) How data are stored in text file; (2) new variable created
-in the environment, `gwas`; (3) `help(read.table)`; (4) what does this
-function do?
-
-```{r read_data, warning=FALSE, results="hold", comment=NA}
+```{r read_data, warning=FALSE, eval=TRUE, comment=NA}
 library(readr)
 gwas <- read_tsv("../data/gwas_catalog.tsv",na = c("","NA","NR"))
 gwas <- as.data.frame(gwas,stringsAsFactors = FALSE)
 print(colnames(gwas))
 ```
 
+A lot is going on in just a few lines of code. I here are only a few of the 
+many things that are important to know about these few lines of code:
+
++ We call a function `read_tsv` that is defined in the `readr` package.
+  It is a specialized function for quickly reading data tables stored in 
+  tab-delimited text format. You can learn more about this function by 
+  typing `help(read_tsv)`.
+  
++ We assign the output of this function to a variable called "gwas". This
+  creates a new variable in our working environment. Type `ls()` to get
+  the list of variables in the current environment.
+  
++ Since the output from `read_tsv` is not a data frame, and we would like
+  to work with a data frame, we convert it using the `as.data.frame` function.
+  
++ The third line accesses a property of the data frame: the names of the
+  columns in the table, or "data frame".
+
 ## Inspecting the data
+
+Now that we have the data loaded into the working environment, we can 
+inspect it. Here are a couple simple commands that are commonly used to 
+get an overview of the data:
 
 ```{R table_properties, results="hold", comment=NA}
 
@@ -407,33 +426,88 @@ print(nrow(gwas))
 print(ncol(gwas))
 ```
 
-```{R more_table_properties, eval=FALSE}
-# Inspect the first 6 rows.
-print(head(gwas))
+These commands show the first 5 columns and the last 5 columns of the 
+data frame:
 
-# Inspect the last 6 rows.
-print(tail(gwas))
+```{R more_table_properties, eval=FALSE}
+print(head(gwas,n = 5))
+print(tail(gwas,n = 5))
 ```
 
-Looking at the chromosome column in more detail:
+## Manipulating the data
+
+We certainly don't have time to look closely at all the GWAS Catalog data.
+We can at least start by looking closely at the "MAPPED_TRAIT" columns, which
+tells us which disease or trait was being studied for a given association (row):
 
 ```{R chromosome_inspect, comment=NA}
 
-# Doesn't say much useful.
-print(summary(gwas[["CHR_ID"]]))
+# Our first attempt at summarizing the MAPPED_TRAIT column doesn't yield
+# much insight.
+print(summary(gwas[["MAPPED_TRAIT"]]))
 
-# What if we convert to a categorical variable?
-chr <- factor(gwas[["CHR_ID"]])
-print(summary(chr,maxsum = 40))
+# What if we convert the column to a categorical variable? That helps,
+# but not a lot; there are too many categories, or "levels", for the summary
+# to be useful, so I capped the summary at showing only the top 10 most
+# common categories (diseases/traits).
+trait <- factor(gwas[["MAPPED_TRAIT"]])
+print(nlevels(trait))
+print(summary(trait,maxsum = 10))
 
-# Second attempt; only retain entries that are 1-22 and X.
-chr <- factor(gwas[["CHR_ID"]],levels = c(1:22,"X"))
-print(summary(chr))
+# To make our initial investigation more manageable, let's focus on
+# only diseases/traits that appear at least 100 entries (that is,
+# reported associations). This is an arbitrary cutoff of course, but
+# data analysis is best approached in small bites.
+counts         <- table(trait)
+traits.to.keep <- which(counts >= 100)
+cat("Number of traits after filtering step:",length(traits.to.keep),"\n")
+gwas.smaller <- subset(gwas,is.element(MAPPED_TRAIT,names(traits.to.keep)))
+cat("Number of table rows after filtering step:",
+    nrow(gwas.smaller))
+
+# Now that MAPPED_TRAIT in the gwas.smaller data frame has a smaller
+# number of categories (levels), let's convert that column to a 
+# factor.
+gwas.smaller$MAPPED_TRAIT <- factor(gwas.smaller$MAPPED_TRAIT)
 ```
+
+A few comments about this chunk of code:
+
++ The `summary` function is a genetic function that can be used for many 
+  different variables and data types. You will find it useful in many 
+  situations.
+
++ A "factor" is a term that R uses for a categorical variable. It is one
+  of the standard data types, and is again useful in many different
+  situations.
+
++ The `table` command (a confusing name, admittedly) is used to count
+  categorical data (factors).
+
++ The call to the `subset` function creates a new data table, `gwas.smaller`,
+  with only entries for the selected diseases/traits. We now have two
+  data frames in our working environment: `gwas` and `gwas.smaller`. 
+
++ The last line in the chunk converts the column to a factor data type,
+  which will be useful in the next section for quickly creating data 
+  summaries.
+
+For the remainder, we will work with `gwas.smaller` only.
 
 ## Creating a simple visual summary of the data
 
-```{R chromosome_plot}
+Counting the number of genetic associations per disease/trait is as simple 
+as calling the `summary` function:
+
+```{R summary_trait}
+
+```
+
+That's nice, but a figure is always better than a table for gaining insight.
+Let's create one using the `ggplot2` package, which has emerged as the 
+most popular approach for plotting in R.
+
+```{R trait_summary_plot}
 library(ggplot2)
 gwas[["CHR_ID"]] <- chr
 print(ggplot(gwas,aes(CHR_ID)) +
@@ -447,7 +521,7 @@ print(ggplot(gwas,aes(CHR_ID)) +
 
 Demonstrate definition of a function.
 
-```{R effect_sizes, comment=NA, warning=FALSE}
+```{R effect_sizes, comment=NA, warning=FALSE, eval=FALSE}
 
 # Extract the two columns we are interested in.
 tbl <- data.frame(x = gwas[["OR or BETA"]],
