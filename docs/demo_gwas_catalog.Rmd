@@ -437,8 +437,8 @@ print(tail(gwas,n = 5))
 ## Manipulating the data
 
 We certainly don't have time to look closely at all the GWAS Catalog data.
-We can at least start by looking closely at the "MAPPED_TRAIT" columns, which
-tells us which disease or trait was being studied for a given association (row):
+But we can at least start by looking closely at the "MAPPED_TRAIT" column, 
+which indicates which disease or trait was being studied:
 
 ```{R chromosome_inspect, comment=NA}
 
@@ -461,14 +461,13 @@ print(summary(trait,maxsum = 10))
 counts         <- table(trait)
 traits.to.keep <- which(counts >= 100)
 cat("Number of traits after filtering step:",length(traits.to.keep),"\n")
-gwas.smaller <- subset(gwas,is.element(MAPPED_TRAIT,names(traits.to.keep)))
-cat("Number of table rows after filtering step:",
-    nrow(gwas.smaller))
+gwas.small <- subset(gwas,is.element(MAPPED_TRAIT,names(traits.to.keep)))
+cat("Number of table rows after filtering step:",nrow(gwas.small))
 
-# Now that MAPPED_TRAIT in the gwas.smaller data frame has a smaller
+# Now that MAPPED_TRAIT in the gwas.small data frame has a smaller
 # number of categories (levels), let's convert that column to a 
 # factor.
-gwas.smaller$MAPPED_TRAIT <- factor(gwas.smaller$MAPPED_TRAIT)
+gwas.small$MAPPED_TRAIT <- factor(gwas.small$MAPPED_TRAIT)
 ```
 
 A few comments about this chunk of code:
@@ -484,38 +483,54 @@ A few comments about this chunk of code:
 + The `table` command (a confusing name, admittedly) is used to count
   categorical data (factors).
 
-+ The call to the `subset` function creates a new data table, `gwas.smaller`,
++ The call to the `subset` function creates a new data table, `gwas.small`,
   with only entries for the selected diseases/traits. We now have two
-  data frames in our working environment: `gwas` and `gwas.smaller`. 
+  data frames in our working environment: `gwas` and `gwas.small`. 
 
 + The last line in the chunk converts the column to a factor data type,
   which will be useful in the next section for quickly creating data 
   summaries.
 
-For the remainder, we will work with `gwas.smaller` only.
+For the remainder, we will work with `gwas.small` only.
 
 ## Creating a simple visual summary of the data
 
 Counting the number of genetic associations per disease/trait is as simple 
 as calling the `summary` function:
 
-```{R summary_trait}
-
+```{R summary_trait, comment=NA}
+print(summary(gwas.small$MAPPED_TRAIT))
 ```
 
-That's nice, but a figure is always better than a table for gaining insight.
-Let's create one using the `ggplot2` package, which has emerged as the 
-most popular approach for plotting in R.
+That's not bad, but a figure is almost always more effective than a table 
+for gaining insight. Let's create one using the `ggplot2` package, which 
+has emerged as the most popular approach for plotting in R because it
+is easy to use (after getting a hang of the unconventional interface) and
+powerful.
 
-```{R trait_summary_plot}
+```{R trait_summary_plot, fig.height=7.5}
 library(ggplot2)
-gwas[["CHR_ID"]] <- chr
-print(ggplot(gwas,aes(CHR_ID)) +
-  geom_bar(fill = "dodgerblue",width = 0.5) + 
+print(ggplot(gwas.small,aes(MAPPED_TRAIT)) +
+  geom_bar(fill = "darkorange",width = 0.5) + 
+  coord_flip() +
   theme_minimal() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()))
 ```
+
+It is difficult to understand how `ggplot` works with one example, and
+we won't attempt to do that here. Here are a few messages to take away from
+this example:
+
++ It is most natural to use `ggplot` with data frames; the `aes` function
+  tells `ggplot` which columns to visualize.
+  
++ After the `geom_bar` call, the rest of the function calls adjust
+  the properties of the figure, and aren't necessary.
+
+**Exercise:** Use the `reorder` function to create a new bar plot 
+in which the traits are listed in increasing or decreasing order by 
+the number of associations.
 
 ## Looking at the relationship between two columns for a given disease:
 
