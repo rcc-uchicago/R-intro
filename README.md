@@ -61,15 +61,15 @@ and follow the steps there.
 
 By the end of this workshop, you should be more comfortable with:
 
-+ Setting up your computing environment for interactive programming in R.
+1. Setting up your computing environment for interactive programming in R.
 
-+ Installing and using packages.
+2. Installing and using packages.
 
-+ Working with "R notebooks".
+3. Working with "R notebooks."
 
-+ Executing R code, and build notebooks into sharable documents.
+4. Executing R code, and build notebooks into sharable documents.
 
-+ Implementing simple data analysis steps by example.
+5. Implementing simple data analysis steps by example.
 
 ## Other useful resources
 

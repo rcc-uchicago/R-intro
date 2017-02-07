@@ -29,10 +29,10 @@ inherited diseases and completx traits. My aim in using the GWAS Catalog
 is to illustrate using R to process and analyze large-scale, complex 
 tabular data. 
 
-Importantly, the GWAS Catalog is very "messy" data; consider
-that hundreds of people have inputted data into the database, with only 
-partial checks on data quality. In our analyses, we will have to manipulate 
-and filter the data in order to make sense of it.
+The GWAS Catalog is "messy" data; hundreds of people have inputted data 
+into the database, with only partial checks on data quality and consistency. 
+In our analyses, we will have to manipulate and filter the data in order to 
+make sense of it.
 
 For background on the GWAS Catalog, see the 
 [GWAS Catalog paper](http://doi.org/10.1093/nar/gkt1229). See also the 
@@ -41,7 +41,7 @@ summary of the data.
 
 # How to use this document
 
-There are several ways to view this document:
+There are several ways to use this document:
 
 1. The simplest option is to open it up in a text editor. I recommend 
    choosing a text editor that has syntax highlighting for Markdown, 
@@ -53,14 +53,15 @@ There are several ways to view this document:
    to read on the screen, such as PDF or HTML. In the same folder as
    this file, I have provided an example of an HTML file rendered from 
    this document, which can be viewed in your favourite Web browser.
+   (I've removed many of the results from this document so I don't spoil 
+   them for you.)
+   
+# This notebook is an interactive document
 
-## This notebook is an interactive document
-
-Although you caneasily generate all the output and figures with a single 
-command from the`rmarkdown` package (see below), my recommendation is to 
-step through the code and explanations, and run the code on your own by 
-copying and pasting the code into the R console, or by using the "Run" 
-menu in RStudio.
+Although you can easily generate all the output and figures with a single 
+command from the `rmarkdown` package (see below), I recommend stepping 
+through the code and explanations; run the code on your own by copying and 
+pasting the code into the R console, or by using the "Run" menu in RStudio.
 
 # Introduce yourself
 
