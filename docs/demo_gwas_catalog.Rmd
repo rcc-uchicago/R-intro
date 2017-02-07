@@ -415,10 +415,40 @@ If you don't see an error, then the packages were loaded successfully.
 
 # Executing the R code
 
-**Add instructions here for running the code; give instructions from
-RStudio, and using the RMarkdown command.**
+Before we walk through the analysis of the GWAS Catalog data, let's first
+try to run the code from beginning to end. There are several ways to do this 
+depending on whether you are running R or RStudio. You are welcome to try
+all of these approaches.
 
-# Reading the data into the R environment
+1. In RStudio, use the `Run > Run All` menu option. This will output the text 
+   results to the Console window, and generate the plots in the Plots window.
+  
+2. In RStudio, use the `Knit > Knit to HTML` menu option. Depending on your 
+   settings, this may render the document in the Viewer window.
+   
+3. In R, you can create an HTML file from the R Markdown notebook with the 
+   following commands:
+
+```{R run_notebook, eval=FALSE}
+library(rmarkdown)
+render("demo_gwas_catalog.Rmd",
+       html_document(toc = TRUE,toc_float = TRUE,
+                     number_sections = TRUE,
+                     fig_caption = FALSE))
+```
+
+If you see `Output created: demo_gwas_catalog.html` toward the end of the
+output, it means that the HTML document was successfully generated. Once 
+this is successful, you can open up this document in your favourite Web
+browser.
+
+# The R data analysis, step-by-step
+
+Now that we have successfully run the code, we are now ready to walk through 
+the analysis steps in some detail. The simplest way to walk through the code
+is to copy & paste the individual chunks, or lines of code, into the R console.
+
+## Reading the data into the R environment
 
 The GWAS Catalog data set is a large table with 35,077 rows and 37 columns. 
 It could conceivably be opened in Excel. To illustrate this, open the
@@ -452,7 +482,7 @@ many things that are important to know about these few lines of code:
 + The third line accesses a property of the data frame: the names of the
   columns in the table, or "data frame".
 
-# Inspecting the data
+## Inspecting the data
 
 Now that we have the data loaded into the working environment, we can 
 inspect it. Here are a couple simple commands that are commonly used to 
@@ -473,7 +503,7 @@ print(head(gwas,n = 5))
 print(tail(gwas,n = 5))
 ```
 
-# Manipulating the data
+## Manipulating the data
 
 We certainly don't have time to look closely at all the GWAS Catalog data.
 But we can at least start by looking closely at the "MAPPED_TRAIT" column, 
@@ -532,7 +562,7 @@ A few comments about this chunk of code:
 
 For the remainder, we will work with `gwas.small` only.
 
-# Creating a simple visual summary of the data
+## Creating a simple visual summary of the data
 
 Counting the number of genetic associations per disease/trait is as simple 
 as calling the `summary` function:
@@ -571,7 +601,7 @@ this example:
 in which the traits are listed in increasing or decreasing order by 
 the number of associations.
 
-# Defining a function to efficiently reuse code
+## Defining a function to efficiently reuse code
 
 So far, we have focused on getting broad-level summaries of the 
 GWAS Catalog data. In this final portion of our data analysis, we want 
