@@ -31,6 +31,9 @@ inherited diseases and completx traits. My aim in using the GWAS Catalog
 is to illustrate using R to process and analyze large-scale, complex 
 tabular data. 
 
+This notebook also contains instructions for downloading the code and data,
+including this R Notebook.
+
 The GWAS Catalog is "messy" data; hundreds of people have inputted data 
 into the database, with only partial checks on data quality and consistency. 
 In our analyses, we will have to manipulate and filter the data in order to 
@@ -270,9 +273,8 @@ environment that can generate graphics. The recommended option is to run
 R or RStudio on *midway*.
 
 In this section, we will download, or "clone", all the files from the Github
-repository. Contained in this repository is the notebook 
-[demo_gwas_catalog.Rmd](demo_gwas_catalog.Rmd) that was used to generate 
-the webpage.
+repository. This repository includes the R Notebook 
+[demo_gwas_catalog.Rmd](demo_gwas_catalog.Rmd).
 
 There are several ways to download the code:
 
