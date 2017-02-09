@@ -13,8 +13,8 @@ output:
 
 # About this document
 
-This is an R Markdown Notebook, or a document (e.g., PDF) generated from
-an R Markdown Notebook.
+This is an R Notebook—either the original file in R Markdown format, or a
+document (e.g., HTML) generated from the original file.
 
 [R Markdown](http://r4ds.had.co.nz/r-markdown.html) combines
 [Markdown](http://daringfireball.net/projects/markdown), a popular,
@@ -43,17 +43,21 @@ summary of the data.
 
 # How to use this document
 
-**Note:** Skip this section if you are viewing the HTML or PDF file; it is
-only relevant if you are viewing the original R Markdown file 
-(`demo_gwas_catalog.Rmd`).
+**This notebook is an interactive document**. Although you can easily 
+generate all the output and figures with a single command from the `rmarkdown` package, I recommend stepping through the code and explanations; run the code 
+on your own by copying and pasting the code into the R console, or by using 
+the "Run" menu in RStudio.
 
-There are several ways to use this document:
+## Using the R Markdown notebook 
+
+If you are viewing the original R Markdown Notebook (`demo_gwas_catalog.Rmd`), 
+you may use this file in several ways:
 
 1. The simplest option is to open it up in a text editor. I recommend 
-   choosing a text editor that has syntax highlighting for Markdown, 
-   such as emacs or [Atom](http://atom.io). 
+   choosing a text editor that has syntax highlighting for Markdown, such as 
+   emacs or [Atom](http://atom.io). 
    
-2. Open this file in RStudio (see below for details).
+2. Open this file in RStudio (see below for more details).
 
 3. Render, or "knit", this notebook into a format that is pleasant
    to read on the screen, such as PDF or HTML. In the same folder as
@@ -62,13 +66,6 @@ There are several ways to use this document:
    (I've removed many of the results from this document so I don't spoil 
    them for you.)
    
-# This notebook is an interactive document
-
-Although you can easily generate all the output and figures with a single 
-command from the `rmarkdown` package (see below), I recommend stepping 
-through the code and explanations; run the code on your own by copying and 
-pasting the code into the R console, or by using the "Run" menu in RStudio.
-
 # Introduce yourself
 
 Introduce yourself to your neighbors. If you get stuck, please ask one your 
@@ -273,7 +270,11 @@ environment that can generate graphics. The recommended option is to run
 R or RStudio on *midway*.
 
 In this section, we will download, or "clone", all the files from the Github
-repository. There are several ways this can be done:
+repository. Contained in this repository is the notebook 
+[demo_gwas_catalog.Rmd](demo_gwas_catalog.Rmd) that was used to generate 
+the webpage.
+
+There are several ways to download the code:
 
 1. Go to the [Github webpage](http://github.com/rcc-uchicago/R-intro) and 
    click the green "Clone or download" button.

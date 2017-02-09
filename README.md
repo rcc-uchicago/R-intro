@@ -53,9 +53,12 @@ Attribution license
 
 ## Quick Start
 
-Go to [this
-webpage](https://rcc-uchicago.github.io/R-intro/demo_gwas_catalog.html)
-and follow the steps there.
+Go to
+[this webpage](https://rcc-uchicago.github.io/R-intro/demo_gwas_catalog.html)
+and follow the steps there to set up your R environment, download the
+code and data, and run the code. This webpage was generated from the R
+notebook included in this repository,
+[demo_gwas_catalog](docs/demo_gwas_catalog.Rmd).
 
 ## Aims
 
