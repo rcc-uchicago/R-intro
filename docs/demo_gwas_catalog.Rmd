@@ -326,7 +326,7 @@ mv alternative gwas_catalog.tsv
 Once you have completed these steps, the `R-intro` folder should have the 
 following file structure:
 
-```{bash repo_tree, eval=FALSE}
+```{bash repo_tree, eval=FALSE, include=TRUE}
 R-intro/
 ├── LICENSE
 ├── README.md
